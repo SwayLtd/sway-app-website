@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sway App</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/sway-app-favicon.ico">
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            function isMobileDevice() {
+                return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+
+            var path = window.location.pathname;
+            var segments = path.split('/');
+            var entityType = segments[1]; // 'artist', 'promoter', etc.
+            var entityId = segments[2];   // The ID of the entity
+
+            if (entityType && entityId) {
+                if (isMobileDevice()) {
+                    // Redirect to the app via deep link
+                    var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
+                    window.location.href = deepLinkUrl;
+                } else {
+                    // Load or render the web version for the entity
+                    // For example, make an API call to fetch data and display it
+                }
+            } else {
+                // If the app is not installed, after a delay, redirect to a fallback page
+                setTimeout(function() {
+                    window.location.href = "https://sway.events/download"; // Page with instructions or download links
+                }, 2000); // Delay in milliseconds
+                <p>If you are not redirected automatically, <a href="https://sway.events/download">click here</a>.</p>
+            }
+        });
+    </script>
+</head>
+<body>
+    <p>Loading index...</p>
+</body>
+</html>
