@@ -35,7 +35,7 @@
             font-size: 1em;
             color: #666666;
             text-align: center;
-            max-width: 80%;
+            max-width: 100%;
         }
 
         @keyframes pulse {
@@ -82,16 +82,16 @@
                     messageElement.style.display = 'block';
                 }
             } else {
-                // Handle the home page or other routes
+                // Handle the app page or other routes
             }
         });
     </script>
 </head>
 <body>
     <img src="/assets/images/sway-app.png" alt="Sway Logo" class="logo">
-    <p id="loadingText" class="loading-text">Loading artist...</p>
+    <p id="loadingText" class="loading-text">Loading...</p>
     <p id="message" class="message" style="display: none;">
-        The web version of Sway App is not yet available. Please check back soon!
+        The web version of Sway App is not yet available.<br>Please check back soon, or open the app on your phone!
     </p>
 </body>
 </html>
