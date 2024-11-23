@@ -1,0 +1,29 @@
+[[redirects]]
+  from = "/artist/:id"
+  to = "app.sway.main://app/artist/:id"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/promoter/:id"
+  to = "app.sway.main://app/promoter/:id"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/venue/:id"
+  to = "app.sway.main://app/venue/:id"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/genre/:id"
+  to = "app.sway.main://app/genre/:id"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/user/:id"
+  to = "app.sway.main://app/user/:id"
+  status = 302
+  force = true

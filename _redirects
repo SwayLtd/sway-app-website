@@ -1,0 +1,5 @@
+/artist/:id   app.sway.main://app/artist/:id   302
+/promoter/:id app.sway.main://app/promoter/:id 302
+/venue/:id    app.sway.main://app/venue/:id    302
+/genre/:id    app.sway.main://app/genre/:id    302
+/user/:id     app.sway.main://app/user/:id     302
