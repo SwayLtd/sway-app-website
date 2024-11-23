@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Loading artist...</title>
+    <title>Sway App - Loading...</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/sway-app-favicon.ico">
     <style>
         body, html {
             margin: 0;
@@ -10,15 +11,31 @@
             height: 100%;
             background-color: #ffffff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            font-family: Arial, sans-serif;
         }
 
         .logo {
-            width: 300px; /* Adjust size as needed */
-            height: 300px;
+            width: 400px; /* Adjust size as needed */
+            height: 400px;
             opacity: 1;
             animation: pulse 2s infinite;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #333333;
+        }
+
+        .message {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #666666;
+            text-align: center;
+            max-width: 80%;
         }
 
         @keyframes pulse {
@@ -51,6 +68,7 @@
             var loadingTextElement = document.getElementById('loadingText');
             if (entityType) {
                 loadingTextElement.textContent = 'Loading ' + entityType + '...';
+                document.title = 'Sway App - Loading ' + entityType + '...';
             }
 
             if (entityType && entityId) {
@@ -59,8 +77,9 @@
                     var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
                     window.location.href = deepLinkUrl;
                 } else {
-                    // Load or render the web version
-                    // For example, fetch the entity data and display it on the page
+                    // Display message to non-mobile users
+                    var messageElement = document.getElementById('message');
+                    messageElement.style.display = 'block';
                 }
             } else {
                 // Handle the home page or other routes
@@ -71,5 +90,8 @@
 <body>
     <img src="/assets/images/sway-app.png" alt="Sway Logo" class="logo">
     <p id="loadingText" class="loading-text">Loading artist...</p>
+    <p id="message" class="message" style="display: none;">
+        The web version of Sway App is not yet available. Please check back soon!
+    </p>
 </body>
 </html>

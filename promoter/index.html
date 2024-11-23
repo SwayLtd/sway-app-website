@@ -2,7 +2,57 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Redirecting...</title>
+    <title>Sway App - Loading...</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/sway-app-favicon.ico">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .logo {
+            width: 400px; /* Adjust size as needed */
+            height: 400px;
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #333333;
+        }
+
+        .message {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #666666;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
             function isMobileDevice() {
@@ -14,19 +64,34 @@
             var entityType = segments[1]; // 'artist', 'promoter', etc.
             var entityId = segments[2];   // The ID of the entity
 
-            if (isMobileDevice()) {
-                // Redirect to the app via deep link
-                var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
-                window.location.href = deepLinkUrl;
+            // Update the loading text dynamically
+            var loadingTextElement = document.getElementById('loadingText');
+            if (entityType) {
+                loadingTextElement.textContent = 'Loading ' + entityType + '...';
+                document.title = 'Sway App - Loading ' + entityType + '...';
+            }
+
+            if (entityType && entityId) {
+                if (isMobileDevice()) {
+                    // Redirect to the app via deep link
+                    var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
+                    window.location.href = deepLinkUrl;
+                } else {
+                    // Display message to non-mobile users
+                    var messageElement = document.getElementById('message');
+                    messageElement.style.display = 'block';
+                }
             } else {
-                // Load the web version without changing the URL
-                // You can fetch and display the content dynamically or render the page directly
-                // For example, make an API call to fetch the entity data and display it
+                // Handle the home page or other routes
             }
         });
     </script>
 </head>
 <body>
-    <p>Loading promoter...</p>
+    <img src="/assets/images/sway-app.png" alt="Sway Logo" class="logo">
+    <p id="loadingText" class="loading-text">Loading artist...</p>
+    <p id="message" class="message" style="display: none;">
+        The web version of Sway App is not yet available. Please check back soon!
+    </p>
 </body>
 </html>
