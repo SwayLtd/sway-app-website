@@ -2,7 +2,40 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Redirecting...</title>
+    <title>Loading artist...</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            width: 150px; /* Adjust size as needed */
+            height: 150px;
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.9);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
             function isMobileDevice() {
@@ -14,19 +47,29 @@
             var entityType = segments[1]; // 'artist', 'promoter', etc.
             var entityId = segments[2];   // The ID of the entity
 
-            if (isMobileDevice()) {
-                // Redirect to the app via deep link
-                var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
-                window.location.href = deepLinkUrl;
+            // Update the loading text dynamically
+            var loadingTextElement = document.getElementById('loadingText');
+            if (entityType) {
+                loadingTextElement.textContent = 'Loading ' + entityType + '...';
+            }
+
+            if (entityType && entityId) {
+                if (isMobileDevice()) {
+                    // Redirect to the app via deep link
+                    var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
+                    window.location.href = deepLinkUrl;
+                } else {
+                    // Load or render the web version
+                    // For example, fetch the entity data and display it on the page
+                }
             } else {
-                // Load the web version without changing the URL
-                // You can fetch and display the content dynamically or render the page directly
-                // For example, make an API call to fetch the entity data and display it
+                // Handle the home page or other routes
             }
         });
     </script>
 </head>
 <body>
-    <p>Loading artist...</p>
+    <img src="assets\images\sway-app.png" alt="Sway Logo" class="logo">
+    <p id="loadingText" class="loading-text">Loading artist...</p>
 </body>
 </html>
