@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            function isMobileDevice() {
+                return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+
+            var path = window.location.pathname;
+            var segments = path.split('/');
+            var entityType = segments[1]; // 'artist', 'promoter', etc.
+            var entityId = segments[2];   // The ID of the entity
+
+            if (isMobileDevice()) {
+                // Redirect to the app via deep link
+                var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
+                window.location.href = deepLinkUrl;
+            } else {
+                // Load the web version without changing the URL
+                // You can fetch and display the content dynamically or render the page directly
+                // For example, make an API call to fetch the entity data and display it
+            }
+        });
+    </script>
+</head>
+<body>
+    <p>Loading...</p>
+</body>
+</html>
