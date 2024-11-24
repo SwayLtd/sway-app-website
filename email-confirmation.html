@@ -151,11 +151,6 @@
 
             // Attempt to open the app via the deep link
             window.location.href = deepLinkUrl;
-
-            // Fallback to the website after 2 seconds if the app is not installed
-            setTimeout(function () {
-                window.location.href = "https://sway.events"; // Fallback URL
-            }, 2000);
         }
     </script>
 </body>
