@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sway - Email Confirmation</title>
+    <title>Sway - Email Change Confirmation</title>
     <style>
         /* Reset default margins and paddings */
-        body,
-        html {
+        body, html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -21,12 +19,12 @@
 
         /* Container for the confirmation message */
         .message-container {
-            background-color: #ffffff;
+            background-color: #f9f9f9;
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
         }
 
@@ -38,8 +36,9 @@
 
         /* Paragraph style */
         .message-container p {
-            margin-bottom: 20px;
-            color: #666666;
+            margin-bottom: 30px;
+            color: #555555;
+            line-height: 1.6;
         }
 
         /* Logo style */
@@ -52,11 +51,7 @@
         /* Success message color */
         .success {
             color: #28a745;
-        }
-
-        /* Error message color */
-        .error {
-            color: #dc3545;
+            font-weight: bold;
         }
 
         /* Redirect button style */
@@ -68,18 +63,30 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 1em;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
         }
 
         /* Redirect button hover effect */
         .redirect-button:hover {
             background-color: #0056b3;
         }
+
+        /* Optional: Style for the message before redirection */
+        .initial-message {
+            color: #666666;
+            margin-bottom: 20px;
+        }
     </style>
     <script type="text/javascript">
-        // Function to extract parameters from the URL fragment
-        function getFragmentParams() {
-            const hash = window.location.hash.substring(1); // Remove the '#'
-            const params = new URLSearchParams(hash);
+        /**
+         * Function to extract query parameters from the URL
+         * @returns {Object} An object containing key-value pairs of the query parameters
+         */
+        function getQueryParams() {
+            const query = window.location.search.substring(1); // Remove the '?'
+            const params = new URLSearchParams(query);
             const paramMap = {};
             for (const [key, value] of params.entries()) {
                 paramMap[key] = value;
@@ -87,72 +94,68 @@
             return paramMap;
         }
 
-        // Main function to handle redirection based on the type
-        function handleRedirect() {
-            const params = getFragmentParams();
-            const type = params['type'];
-            const token = params['access_token']; // Used for other types of redirection if needed
-
-            if (!type) {
-                console.error('Redirection type not specified.');
-                // Optionally redirect to an error page or the homepage
-                window.location.href = "https://sway.events/";
-                return;
-            }
-
-            switch (type) {
-                case 'email_change':
-                    // Specific redirection for email change confirmation
-                    window.location.href = "https://sway.events/email-confirmation.html";
-                    break;
-                case 'password_reset':
-                    // Example: Redirection for password reset
-                    window.location.href = "https://sway.events/password-reset.html";
-                    break;
-                // Add other cases as needed
-                default:
-                    console.error('Unknown redirection type:', type);
-                    // Optionally redirect to an error page or the homepage
-                    window.location.href = "https://sway.events/";
-            }
-        }
-
-        // Execute the redirection function once the page is fully loaded
-        window.onload = handleRedirect;
-    </script>
-</head>
-
-<body>
-    <div class="message-container">
-        <!-- Logo Image -->
-        <img src="/assets/images/sway-app.png" alt="Sway Logo" class="logo">
-
-        <!-- Confirmation Heading -->
-        <h2>Email Confirmation</h2>
-
-        <!-- Success Message -->
-        <p class="success">Your email address has been successfully updated!</p>
-
-        <!-- Information Message -->
-        <p>You will be redirected to the application shortly...</p>
-
-        <!-- Redirect Button -->
-        <button class="redirect-button" onclick="redirectToApp()">Continue</button>
-    </div>
-
-    <script type="text/javascript">
         /**
-         * Function to redirect the user to the mobile app via deep link.
-         * If the app is not installed, it falls back to the website homepage after 2 seconds.
+         * Function to handle the redirection to the mobile app via deep link
+         * This function does NOT perform any fallback redirection to sway.events
          */
         function redirectToApp() {
-            // Construct the deep link URL with the token if needed
-            var deepLinkUrl = "app.sway.main://login-callback?token=" + encodeURIComponent(getFragmentParams()['access_token'] || '');
+            const params = getQueryParams();
+            const token = params['access_token'] || '';
+
+            // Construct the deep link URL with the token if necessary
+            const deepLinkUrl = `app.sway.main://login-callback?token=${encodeURIComponent(token)}`;
 
             // Attempt to open the app via the deep link
             window.location.href = deepLinkUrl;
-        }
-    </script>
-</body>
 
+            // Note: No fallback redirection is implemented as per the requirement
+        }
+
+        /**
+         * Function to display the confirmation message
+         */
+        function displayConfirmation() {
+            const params = getQueryParams();
+            const type = params['type'];
+
+            if (type === 'email_change') {
+                // Update the message content for email change confirmation
+                const messageElement = document.getElementById('message');
+                messageElement.innerHTML = `
+                    <p class="success">Your email address has been successfully updated!</p>
+                    <p>You can now continue using the app with your new email.</p>
+                `;
+            } else {
+                // If the type is not recognized, display a generic message
+                const messageElement = document.getElementById('message');
+                messageElement.innerHTML = `
+                    <p class="error">Invalid confirmation type.</p>
+                    <p>Please contact support if you believe this is an error.</p>
+                `;
+            }
+        }
+
+        // Execute functions once the page is fully loaded
+        window.onload = function() {
+            displayConfirmation();
+        };
+    </script>
+</head>
+<body>
+    <div class="message-container">
+        <!-- Logo Image -->
+        <img src="/assets/images/sway-logo.png" alt="Sway Logo" class="logo">
+        
+        <!-- Confirmation Heading -->
+        <h2>Email Change Confirmation</h2>
+        
+        <!-- Message Container -->
+        <div id="message" class="initial-message">
+            <p>Processing your email change...</p>
+        </div>
+        
+        <!-- Redirect Button -->
+        <button class="redirect-button" onclick="redirectToApp()">Open App</button>
+    </div>
+</body>
 </html>
