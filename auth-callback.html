@@ -1,12 +1,60 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sway - Authentification Redirection</title>
+    <title>Sway - Auth Callback</title>
+    <style>
+        /* Reset default margins and paddings */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Loader styling */
+        .loader {
+            width: 100px;
+            height: 100px;
+            background-image: url('/assets/images/sway-app.png'); /* Ensure the path is correct */
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Loading text styling */
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #333333;
+        }
+
+        /* Optional message styling */
+        .message {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #666666;
+            text-align: center;
+            max-width: 100%;
+        }
+    </style>
     <script type="text/javascript">
-        // Fonction pour extraire les paramètres du fragment de l'URL
+        /**
+         * Function to extract parameters from the URL fragment
+         * @returns {Object} An object containing key-value pairs of the fragment parameters
+         */
         function getFragmentParams() {
-            const hash = window.location.hash.substring(1); // Supprime le '#'
+            const hash = window.location.hash.substring(1); // Remove the '#'
             const params = new URLSearchParams(hash);
             const paramMap = {};
             for (const [key, value] of params.entries()) {
@@ -15,40 +63,40 @@
             return paramMap;
         }
 
-        // Fonction principale de redirection
+        /**
+         * Function to handle redirection based on the 'type' parameter
+         */
         function handleRedirect() {
             const params = getFragmentParams();
             const type = params['type'];
 
             if (!type) {
                 console.error('Redirection type not specified.');
-                // Optionnel : Rediriger vers une page d'erreur ou la page d'accueil
+                // Optionally display an error message or redirect to a default page
                 window.location.href = "https://sway.events/";
                 return;
             }
 
             switch(type) {
                 case 'email_change':
-                    // Redirection spécifique pour le changement d'email
+                    // Redirect to the email confirmation page
                     window.location.href = "https://sway.events/email-confirmation.html";
                     break;
-                case 'password_reset':
-                    // Exemple : Redirection pour la réinitialisation du mot de passe
-                    window.location.href = "https://sway.events/password-reset.html";
-                    break;
-                // Ajoutez d'autres cas selon vos besoins
+                // Future cases can be added here (e.g., 'password_reset')
                 default:
                     console.error('Unknown redirection type:', type);
-                    // Optionnel : Rediriger vers une page d'erreur ou la page d'accueil
+                    // Redirect to a default page or display an error
                     window.location.href = "https://sway.events/";
             }
         }
 
-        // Exécute la fonction de redirection une fois la page chargée
+        // Execute the redirection function once the page is fully loaded
         window.onload = handleRedirect;
     </script>
 </head>
 <body>
-    <p>Redirection in progress...</p>
+    <div class="loader"></div>
+    <p class="loading-text">Processing your request...</p>
+    <p class="message" id="message">If you are not redirected automatically, please wait or click the button below.</p>
 </body>
 </html>
