@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sway - Authentification Redirection</title>
+    <script type="text/javascript">
+        // Fonction pour extraire les paramètres du fragment de l'URL
+        function getFragmentParams() {
+            const hash = window.location.hash.substring(1); // Supprime le '#'
+            const params = new URLSearchParams(hash);
+            const paramMap = {};
+            for (const [key, value] of params.entries()) {
+                paramMap[key] = value;
+            }
+            return paramMap;
+        }
+
+        // Fonction principale de redirection
+        function handleRedirect() {
+            const params = getFragmentParams();
+            const type = params['type'];
+
+            if (!type) {
+                console.error('Type de redirection non spécifié.');
+                // Optionnel : Rediriger vers une page d'erreur ou la page d'accueil
+                window.location.href = "https://sway.events/";
+                return;
+            }
+
+            switch(type) {
+                case 'email_change':
+                    // Redirection spécifique pour le changement d'email
+                    window.location.href = "https://sway.events/email-confirmation.html";
+                    break;
+                case 'password_reset':
+                    // Exemple : Redirection pour la réinitialisation du mot de passe
+                    window.location.href = "https://sway.events/password-reset.html";
+                    break;
+                // Ajoutez d'autres cas selon vos besoins
+                default:
+                    console.error('Unknown redirection type:', type);
+                    // Optionnel : Rediriger vers une page d'erreur ou la page d'accueil
+                    window.location.href = "https://sway.events/";
+            }
+        }
+
+        // Exécute la fonction de redirection une fois la page chargée
+        window.onload = handleRedirect;
+    </script>
+</head>
+<body>
+    <p>Redirection in progress...</p>
+</body>
+</html>
