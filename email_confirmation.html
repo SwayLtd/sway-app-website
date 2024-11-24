@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sway - Confirm email change</title>
+    <script type="text/javascript">
+        window.onload = function() {
+            // Extraire les paramètres de l'URL si nécessaire
+            var params = new URLSearchParams(window.location.search);
+            var token = params.get('token'); // Supabase ajoute un token dans l'URL
+
+            // Construire l'URL de deep link avec le token
+            var deepLinkUrl = "app.sway.main://login-callback?token=" + token;
+
+            // Tenter d'ouvrir l'application via le deep link
+            window.location.href = deepLinkUrl;
+
+            // Fallback vers une page web après un délai si l'application n'est pas installée
+            /*setTimeout(function() {
+                window.location.href = "https://sway.events"; // URL de fallback
+            }, 2000);*/
+        };
+    </script>
+</head>
+<body>
+    <p>Email change confirmation</p>
+    <p>Redirect to application...</p>
+</body>
+</html>
