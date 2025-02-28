@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Documentation</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Inclusion de Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div id="container">
+        <!-- Menu de gauche -->
+        <aside id="sidebar">
+            <button id="toggleSidebar" title="Afficher/Cacher le menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul class="menu">
+                    <li>
+                        <span class="menu-title">
+                            <i class="fas fa-plus-circle"></i>
+                            <span class="menu-text">Create</span>
+                            <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                        </span>
+                        <ul>
+                            <li>
+                                <a href="#" data-md="create-events.md">Events</a>
+                            </li>
+                            <li>
+                                <a href="#" data-md="create-venues.md">Venues</a>
+                            </li>
+                            <li>
+                                <a href="#" data-md="create-artists.md">Artists</a>
+                            </li>
+                            <li>
+                                <a href="#" data-md="create-promoters.md">Promoters</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="menu-title">
+                            <i class="fas fa-edit"></i>
+                            <span class="menu-text">Manage &amp; Edit</span>
+                            <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                        </span>
+                        <ul>
+                            <li>
+                                <a href="#" data-md="manage-events.md">Events</a>
+                            </li>
+                            <li>
+                                <a href="#" data-md="manage-venues.md">Venues</a>
+                            </li>
+                            <li>
+                                <a href="#" data-md="manage-artists.md">Artists</a>
+                            </li>
+                            <li>
+                                <a href="#" data-md="manage-promoters.md">Promoters</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Zone de contenu principal -->
+        <main id="content">
+            <h1>Bienvenue dans la documentation</h1>
+            <p>Sélectionnez une page dans le menu pour afficher son contenu.</p>
+        </main>
+
+        <!-- Zone des conseils/tips à droite -->
+        <aside id="tips">
+            <div class="tip">
+                <i class="fas fa-lightbulb"></i>
+                <p>Astuce : Utilisez le menu pour naviguer.</p>
+            </div>
+            <div class="tip">
+                <i class="fas fa-info-circle"></i>
+                <p>Info : Le contenu est en markdown.</p>
+            </div>
+        </aside>
+    </div>
+    <!-- Chargement de la librairie marked pour interpréter le markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

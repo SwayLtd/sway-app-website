@@ -1,0 +1,248 @@
+/* Réinitialisation */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Positionnement fixe et défilement interne pour le menu et les astuces */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background-color: #f7f7f7;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    overflow-y: auto;
+    transition: width 0.3s;
+}
+
+#sidebar.collapsed {
+    width: 50px;
+}
+
+#tips {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: #f9f9f9;
+    border-left: 1px solid #ddd;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+/* Contenu principal avec marges pour éviter le chevauchement */
+/* Styles pour le contenu Markdown */
+#content {
+    background-color: #fff;
+    padding: 20px;
+    margin-left: 250px;
+    margin-right: 200px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    line-height: 1.6;
+}
+
+/* Titres */
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6 {
+    margin-top: 1.2em;
+    margin-bottom: 0.6em;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Paragraphes */
+#content p {
+    margin-bottom: 1em;
+}
+
+/* Listes */
+#content ul,
+#content ol {
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+}
+
+/* Liens */
+#content a {
+    color: #FFBC00;
+    text-decoration: none;
+}
+
+#content a:hover {
+    text-decoration: underline;
+}
+
+/* Blocs de code */
+#content pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 3px;
+    overflow-x: auto;
+    margin-bottom: 1em;
+}
+
+/* Code inline */
+#content code {
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: Consolas, monospace;
+}
+
+/* Citations */
+#content blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 15px;
+    margin-left: 0;
+    color: #555;
+    font-style: italic;
+}
+
+/* Tableaux (optionnel) */
+#content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+#content table,
+#content th,
+#content td {
+    border: 1px solid #ccc;
+}
+
+#content th,
+#content td {
+    padding: 8px;
+    text-align: left;
+}
+
+
+/* Bouton de basculement */
+#toggleSidebar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #FFBC00;
+    margin-bottom: 10px;
+}
+
+/* Navigation et espacement du menu */
+#sidebar nav ul.menu {
+    list-style: none;
+    padding: 10px;
+}
+
+#sidebar nav ul.menu>li {
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+/* Titre principal du menu aligné à gauche */
+.menu-title {
+    font-weight: bold;
+    color: #FFBC00;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    text-align: left;
+}
+
+.menu-title .menu-text {
+    flex: 1;
+}
+
+.menu-title i {
+    margin-right: 5px;
+}
+
+/* Sous-menu animé via max-height, fermé par défaut */
+#sidebar nav ul.menu ul {
+    list-style: none;
+    padding-left: 20px;
+    padding-top: 10px;
+    /* Espacement entre le titre et le premier élément */
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+}
+
+#sidebar nav ul.menu li.active>ul {
+    max-height: 500px;
+}
+
+#sidebar nav ul.menu a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 5px 0;
+}
+
+/* Styles pour le TOC (table des matières) imbriqué */
+.toc {
+    list-style: none;
+    margin-top: 10px;
+    max-height: none !important;
+    overflow: visible !important;
+    /* Optionnel, pour la visibilité */
+}
+
+
+.toc li {
+    margin-bottom: 5px;
+    position: relative;
+}
+
+/* Les sous-listes du TOC sont cachées par défaut */
+.toc ul {
+    display: none;
+    padding-left: 15px;
+}
+
+/* Lorsque le li est actif, on affiche la sous-liste */
+.toc li.active>ul {
+    display: block;
+}
+
+/* Style pour les flèches dans le TOC */
+.toc li .toc-arrow {
+    cursor: pointer;
+    margin-right: 5px;
+    user-select: none;
+}
+
+.toc li a {
+    text-decoration: none;
+    color: #333;
+}
+
+/* Styles pour les astuces */
+.tip {
+    background-color: #FFBC00;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.tip i {
+    margin-right: 5px;
+}
