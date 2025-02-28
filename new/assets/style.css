@@ -67,13 +67,21 @@ img {
         top: 0;
         left: 0;
         width: 50vw;
-        /* ou ajuste si tu veux encore plus de place */
         height: 100vh;
-        background-color: #fffefc;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 40px;
+        justify-content: center;
+        /* Centre horizontalement */
+        align-items: flex-start;
+        /* Aligne en haut verticalement */
+        padding-top: 40px;
+        /* Décalage depuis le haut */
+        background-color: #fff;
+    }
+
+
+    .left-panel-content {
+        margin-top: 16%;
+        margin-left: 16%;
     }
 
     .sway-logo {
@@ -98,6 +106,7 @@ img {
         color: rgb(131, 139, 143);
         margin-bottom: 40px;
         line-height: 1.4;
+        width: 80%;
         /* optionnel pour lisibilité */
     }
 
@@ -110,11 +119,39 @@ img {
         width: 200px;
         height: 55px;
         cursor: pointer;
+        transition: transform 0.2s ease;
     }
 
-    .left-panel-footer {
-        margin-top: 20px;
+    .store-btn:hover {
+        transform: translateY(-2px);
+        /* Décalage de 2px vers le haut */
     }
+
+
+    .left-panel-footer {
+        /* On place le footer en bas du conteneur */
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        margin-left: 14%;
+        /* Style demandé */
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 22px;
+
+        font-weight: 600;
+        font-size: 16px;
+        color: rgb(151, 160, 165);
+    }
+
+    .sway-highlight {
+        color: #FFBC00;
+        /* Jaune */
+    }
+
 
     /* Partie droite */
     #scroll-container {
@@ -150,8 +187,11 @@ img {
     /* Slide 1 : image plus grande */
     .first-slide-content .phone-image {
         width: 300px;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
+        margin-left: -20px;
+        /* Décale l'image de 20px vers la gauche */
     }
+
 
     .scroll-text {
         font-weight: 800;
@@ -203,8 +243,12 @@ img {
     }
 
     .feature-title {
-        font-size: 20px;
-        font-weight: bold;
+        font-weight: 800;
+        font-size: 28px;
+        text-align: center;
+        padding-left: 64px;
+        padding-right: 64px;
+        padding-top: 5vh;
     }
 }
 
