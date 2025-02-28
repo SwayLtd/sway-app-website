@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: Inter, Arial, Helvetica, sans-serif;
     color: #333;
 
     /* 5 slides horizontales => 4 “pages” verticales => 400vh 
@@ -67,8 +67,9 @@ img {
         top: 0;
         left: 0;
         width: 50vw;
+        /* ou ajuste si tu veux encore plus de place */
         height: 100vh;
-        background-color: #fff;
+        background-color: #fffefc;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -76,26 +77,28 @@ img {
     }
 
     .sway-logo {
-        width: 60px;
+        width: 106px;
         margin-bottom: 20px;
     }
 
     .app-title {
-        font-size: 28px;
+        font-size: 48px;
         font-weight: bold;
         margin-top: 10px;
     }
 
     .subtitle {
-        font-size: 18px;
-        font-weight: 300;
+        font-size: 24px;
+        font-weight: bold;
         margin: 8px 0 16px 0;
     }
 
     .description {
-        font-size: 16px;
+        font-size: 18px;
+        color: rgb(131, 139, 143);
+        margin-bottom: 40px;
         line-height: 1.4;
-        margin-bottom: 24px;
+        /* optionnel pour lisibilité */
     }
 
     .store-buttons {
@@ -104,7 +107,8 @@ img {
     }
 
     .store-btn {
-        width: 80px;
+        width: 200px;
+        height: 55px;
         cursor: pointer;
     }
 
@@ -153,7 +157,7 @@ img {
         font-weight: 800;
         font-size: 32px;
         /* Dégradé horizontal : jaune (#FFBC00) → noir (#000) */
-        background: linear-gradient(to right, #FFBC00 1%, #000000 80%);
+        background: linear-gradient(to right, #FFBC00 1%, #030303 80%);
         background-size: 200% auto;
 
         /* On “clip” le background au texte pour peindre uniquement les glyphes */
@@ -262,7 +266,7 @@ img {
         align-items: center;
         padding: 10px 20px;
         border-bottom: 1px solid #ddd;
-        background-color: #fff;
+        background-color: #fffefc;
     }
 
     .left-panel {
