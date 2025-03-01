@@ -9,23 +9,46 @@
 
     <!-- Lien vers la feuille de style -->
     <link rel="stylesheet" href="assets/style.min.css">
+
+    <!-- SEO -->
+    <meta name="description"
+        content="Sway is a mobile event management application that helps users discover, organize, and manage raves and festivals effortlessly.">
+    <link rel="canonical" href="https://sway.events">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sway – Helping you find raves and festivals">
+    <meta property="og:description" content="Discover, organize, and manage events effortlessly with Sway.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sway.events">
+    <meta property="og:image" content="assets/images/og-image.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sway – Helping you find raves and festivals">
+    <meta name="twitter:description" content="Discover, organize, and manage events effortlessly with Sway.">
+    <meta name="twitter:image" content="assets/images/og-image.jpg">
+
 </head>
 
 <body>
-
     <!-- HEADER MOBILE (uniquement ≤ 767px) -->
-    <div class="mobile-header">
+    <header class="mobile-header">
         <div class="mobile-header-content">
             <img class="mobile-logo" src="assets/images/sway-app.png" alt="Sway Logo">
             <span class="mobile-app-name">Sway</span>
         </div>
-        <button class="get-app-btn">Get the app</button>
-    </div>
+        <!-- Nouvelle navigation -->
+        <nav class="mobile-nav">
+            <ul>
+                <li><button class="get-app-btn">Get the app</button></li>
+            </ul>
+        </nav>
+    </header>
     <!-- Fin header mobile -->
 
     <!-- Conteneur droit (carrousel horizontal en laptop) 
        => ON LE MET EN PREMIER -->
-    <div id="scroll-container">
+    <main id="scroll-container">
         <!-- Panneau gauche (fixe en laptop) => ON LE MET APRES -->
         <div class="left-panel">
             <div class="left-panel-content">
@@ -45,12 +68,12 @@
                 </div>
             </div>
 
-            <div class="left-panel-footer">
+            <footer class="left-panel-footer">
                 <p class="copyright">
                     Copyright © 2025
                     <span class="sway-highlight">Sway</span>
                 </p>
-            </div>
+            </footer>
         </div>
         <!-- Fin panneau gauche -->
         <div id="horizontal-section">
@@ -65,7 +88,8 @@
             <!-- Slide 2 -->
             <section class="slide feature-slide">
                 <div class="feature-slide-content">
-                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image" />
+                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image"
+                        loading="lazy" />
                     <h3 class="feature-title">Discover the best music events 🎵</h3>
                 </div>
             </section>
@@ -73,7 +97,8 @@
             <!-- Slide 3 -->
             <section class="slide feature-slide">
                 <div class="feature-slide-content">
-                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image" />
+                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image"
+                        loading="lazy" />
                     <h3 class="feature-title">Effortless ticket management at 👆</h3>
                 </div>
             </section>
@@ -81,7 +106,8 @@
             <!-- Slide 4 -->
             <section class="slide feature-slide">
                 <div class="feature-slide-content">
-                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image" />
+                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image"
+                        loading="lazy" />
                     <h3 class="feature-title">Stay ahead with smart notifications 🔔</h3>
                 </div>
             </section>
@@ -89,16 +115,40 @@
             <!-- Slide 5 -->
             <section class="slide feature-slide">
                 <div class="feature-slide-content">
-                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image" />
+                    <img src="assets/images/phone-mockup.png" alt="Feature phone mockup" class="mockup-image"
+                        loading="lazy" />
                     <h3 class="feature-title">Connect and share with the raving community 💬</h3>
                 </div>
             </section>
         </div>
-    </div>
+    </main>
     <!-- Fin #scroll-container -->
 
     <!-- SCRIPT JAVASCRIPT -->
     <script src="assets/script.min.js"></script>
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "MobileApplication",
+          "name": "Sway",
+          "operatingSystem": "ANDROID, IOS",
+          "applicationCategory": "BusinessApplication",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.5",
+            "reviewCount": "276"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+          },
+          "url": "https://sway.events",
+          "description": "Sway is a mobile event management application that helps users discover, organize, and manage raves and festivals effortlessly."
+        }
+    </script>
+
 </body>
 
 </html>
