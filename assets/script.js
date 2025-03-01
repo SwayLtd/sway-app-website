@@ -1,16 +1,8 @@
-// script.js
-
-// Nombre total de slides
-const slidesCount = 5;
-// Index de la slide courante
+// Variable globale
+let slidesCount = 0;
 let currentIndex = 0;
-// Accumulateur pour la molette
 let wheelDeltaAcc = 0;
 
-/**
- * Conversion continue du scroll vertical => translation horizontale
- * (identique à l'exemple précédent)
- */
 function handleScroll() {
     const horizontalSection = document.getElementById("horizontal-section");
     if (!horizontalSection) return;
@@ -21,7 +13,7 @@ function handleScroll() {
         const clamped = Math.max(0, Math.min(scrollTop, maxScroll));
         const ratio = clamped / maxScroll;
 
-        // 4 slides * 50vw => 2 * window.innerWidth
+        // Chaque slide fait 50vw, donc (slidesCount - 1)*0.5*window.innerWidth
         const maxTranslate = (slidesCount - 1) * 0.5 * window.innerWidth;
         const translateX = -ratio * maxTranslate;
 
@@ -31,11 +23,6 @@ function handleScroll() {
     }
 }
 
-/**
- * Gère le "scroll cranté" à la molette en laptop :
- * - On cumule deltaY dans wheelDeltaAcc
- * - Si on dépasse le seuil, on change de slide
- */
 function handleWheel(event) {
     if (window.innerWidth >= 1025) {
         event.preventDefault();
@@ -43,7 +30,6 @@ function handleWheel(event) {
 
         wheelDeltaAcc += event.deltaY;
 
-        // Si on dépasse le seuil positif => slide suivante
         if (wheelDeltaAcc > threshold) {
             if (currentIndex < slidesCount - 1) {
                 currentIndex++;
@@ -53,8 +39,7 @@ function handleWheel(event) {
                 behavior: "smooth",
             });
             wheelDeltaAcc = 0;
-        } // Si on dépasse le seuil négatif => slide précédente
-        else if (wheelDeltaAcc < -threshold) {
+        } else if (wheelDeltaAcc < -threshold) {
             if (currentIndex > 0) {
                 currentIndex--;
             }
@@ -68,7 +53,6 @@ function handleWheel(event) {
 }
 
 function handleResize() {
-    // Si on quitte le mode laptop, on remet tout à zéro
     if (window.innerWidth < 1025) {
         currentIndex = 0;
         wheelDeltaAcc = 0;
@@ -80,15 +64,17 @@ function handleResize() {
     }
 }
 
-// Listeners
 window.addEventListener("scroll", handleScroll);
 window.addEventListener("wheel", handleWheel, { passive: false });
 window.addEventListener("resize", handleResize);
 
 document.addEventListener("DOMContentLoaded", () => {
-    const slides = document.querySelectorAll(".slide");
-    const slidesCount = slides.length; // ici 5
+    // Définir slidesCount dynamiquement
+    slidesCount = document.querySelectorAll(".slide").length;
+    // Ajuster la hauteur du body en fonction du nombre de slides
     document.body.style.height = slidesCount * 100 + "vh";
+    // Mettre à jour la variable CSS pour la largeur du horizontal-section
+    document.documentElement.style.setProperty("--slides-count", slidesCount);
     // Initialisation de la translation
     handleScroll();
 });

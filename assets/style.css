@@ -190,7 +190,7 @@ ul {
     /* Section horizontale : 5 slides x 50vw = 250vw */
     #horizontal-section {
         position: relative;
-        width: 250vw;
+        width: calc(50vw * var(--slides-count));
         height: 100%;
         display: flex;
         transform: translateX(0);
