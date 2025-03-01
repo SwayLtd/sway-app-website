@@ -318,8 +318,27 @@ ul {
         max-width: 900px;
     }
 
+    .logo-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-title .sway-logo {
+        margin-right: 10px;
+    }
+
+    .logo-title .app-title {
+        margin: 0;
+        /* Ajustez ce padding ou margin pour repositionner le texte verticalement */
+        padding-top: 4px;
+    }
+
+
     .slide.feature-slide {
         order: 3;
+        background-color: #f2f2f2;
+        min-width: 100%;
     }
 
     .left-panel-footer {
@@ -345,13 +364,13 @@ ul {
 
     /* Première slide (phone-image) */
     .first-slide-content {
+        margin: 10% auto 10% auto;
         display: flex;
         height: 40vh;
         align-items: center;
         justify-content: center;
         text-align: center;
-        margin: 20px auto;
-        width: 100%;
+        min-width: 100%;
     }
 
     .first-slide-content .phone-image {
@@ -416,8 +435,8 @@ ul {
 
     .mockup-image {
         margin-bottom: 20px;
-        width: 50%;
-        height: 60% !important;
+        width: 30%;
+        height: 60%;
         object-fit: contain;
     }
 
