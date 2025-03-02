@@ -1,5 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Basculement de la barre latérale principale
+    // Function to load a markdown file and generate its nested TOC
+    function loadMarkdown(mdFile) {
+        fetch(mdFile)
+            .then((response) => response.text())
+            .then((md) => {
+                const contentContainer = document.getElementById("content");
+                contentContainer.innerHTML = marked.parse(md);
+                const toc = generateNestedTOC(contentContainer);
+                console.log("TOC generated:", toc);
+                // Insert the TOC in the menu
+                insertTOCInMenu(activeLink, toc);
+                if (toc) {
+                    addToggleArrows(toc);
+                }
+            })
+            .catch((error) => {
+                document.getElementById("content").innerHTML =
+                    "<p>Error loading content.</p>";
+                console.error(error);
+            });
+    }
+
+    // Toggle the main sidebar
     document.getElementById("toggleSidebar").addEventListener(
         "click",
         function () {
@@ -7,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     );
 
-    // Gestion de l'ouverture/fermeture des sous-menus principaux ("Create", "Manage & Edit")
+    // Handle open/close of main submenus ("Create", "Manage & Edit")
     document.querySelectorAll("#sidebar .menu-title").forEach(function (title) {
         title.addEventListener("click", function () {
             const parentLi = this.parentElement;
@@ -23,66 +45,60 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Chargement du contenu markdown et génération du TOC imbriqué
+    // Variable to keep track of the active link
+    let activeLink = null;
+
+    // Handle clicks on menu links to load markdown and update URL
     document.querySelectorAll("#sidebar a[data-md]").forEach(function (link) {
         link.addEventListener("click", function (e) {
             e.preventDefault();
+            activeLink = this;
             const mdFile = this.getAttribute("data-md");
-            fetch(mdFile)
-                .then((response) => response.text())
-                .then((md) => {
-                    const contentContainer = document.getElementById("content");
-                    contentContainer.innerHTML = marked.parse(md);
-                    const toc = generateNestedTOC(contentContainer);
-                    console.log("TOC generated:", toc);
-                    insertTOCInMenu(this, toc);
-                    if (toc) {
-                        addToggleArrows(toc);
-                    }
-                })
-                .catch((error) => {
-                    document.getElementById("content").innerHTML =
-                        "<p>Erreur de chargement du contenu.</p>";
-                    console.error(error);
-                });
+
+            // Determine category from the parent menu (e.g., "create" or "manage-edit")
+            const categoryElem = this.closest("ul").closest("li").querySelector(
+                ".menu-text",
+            );
+            let category = "";
+            if (categoryElem) {
+                category = categoryElem.textContent.trim().toLowerCase()
+                    .replace(/\s+/g, "-");
+            }
+            // Get the page from the link text (e.g., "events")
+            const page = this.textContent.trim().toLowerCase().replace(
+                /\s+/g,
+                "-",
+            );
+
+            // Build the new URL including the "docs" prefix
+            const newUrl = "/docs/" + category + "/" + page;
+
+            // Update the URL without reloading the page
+            history.pushState({ mdFile: mdFile }, "", newUrl);
+            loadMarkdown(mdFile);
         });
     });
 
-    // Après avoir généré le TOC, ajoute une flèche sur chaque li qui a un sous-menu
-    function addToggleArrows(toc) {
-        const itemsWithSub = toc.querySelectorAll("li > ul");
-        itemsWithSub.forEach(function (subUl) {
-            const li = subUl.parentElement;
-            // Si le li n'a pas déjà une flèche, on l'ajoute
-            if (!li.querySelector(".toc-arrow")) {
-                const arrow = document.createElement("span");
-                arrow.className = "toc-arrow";
-                arrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
-                // Insère la flèche au début du li
-                li.insertBefore(arrow, li.firstChild);
-                // Masque par défaut le sous-menu (si ce n'est pas déjà fait)
-                subUl.style.display = "none";
-                // Gestion du clic sur la flèche
-                arrow.addEventListener("click", function (e) {
-                    e.stopPropagation();
-                    if (
-                        subUl.style.display === "none" ||
-                        subUl.style.display === ""
-                    ) {
-                        subUl.style.display = "block";
-                        arrow.innerHTML = '<i class="fas fa-chevron-up"></i>';
-                    } else {
-                        subUl.style.display = "none";
-                        arrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
-                    }
-                });
+    // Handle popstate events (back/forward navigation)
+    window.addEventListener("popstate", function (event) {
+        if (event.state && event.state.mdFile) {
+            loadMarkdown(event.state.mdFile);
+        } else {
+            // Deduce the markdown file from the URL
+            const pathParts = location.pathname.split("/").filter(Boolean);
+            if (pathParts.length === 3 && pathParts[0] === "docs") {
+                const mdFile = pathParts[1] + "-" + pathParts[2] + ".md";
+                loadMarkdown(mdFile);
+            } else {
+                // Default content if URL doesn't match expected pattern
+                document.getElementById("content").innerHTML =
+                    "<h1>Welcome to the Documentation</h1><p>Select a page from the menu to view its content.</p>";
             }
-        });
-    }
+        }
+    });
 
-    // Fonction générant un TOC imbriqué à partir des titres (h2, h3, h4)
+    // Function to generate a nested TOC from headings (h2, h3, h4)
     function generateNestedTOC(container) {
-        // Récupère tous les titres dans l'ordre
         const headings = Array.from(container.querySelectorAll("h2, h3, h4"));
         console.log("Headings found:", headings);
         if (headings.length === 0) return null;
@@ -90,8 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const rootUl = document.createElement("ul");
         rootUl.className = "toc";
 
-        // On utilise une pile pour gérer la hiérarchie des niveaux
-        let currentLevel = 2; // h2 est le niveau de base
+        let currentLevel = 2; // Consider h2 as base level
         let currentList = rootUl;
         const listStack = [rootUl];
 
@@ -119,12 +134,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             li.appendChild(a);
 
-            // Si le niveau augmente, on crée un nouveau sous-menu
             if (level > currentLevel) {
-                const newUl = document.createElement("ul");
-                newUl.style.display = "none"; // Masqué par défaut
                 const lastLi = currentList.lastElementChild;
                 if (lastLi) {
+                    const newUl = document.createElement("ul");
+                    newUl.style.display = "none"; // Hidden by default
                     lastLi.appendChild(newUl);
                     currentList = newUl;
                     listStack.push(newUl);
@@ -142,8 +156,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return rootUl;
     }
 
+    // Function to add toggle arrows to each <li> in the TOC that has a submenu
     function addToggleArrows(toc) {
-        // Parcourt tous les <li> du TOC
         const liItems = toc.querySelectorAll("li");
         liItems.forEach((li) => {
             const subUl = li.querySelector("ul");
@@ -151,11 +165,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const arrow = document.createElement("span");
                 arrow.className = "toc-arrow";
                 arrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
-                // Insère la flèche au début du li
                 li.insertBefore(arrow, li.firstChild);
-                // S'assurer que le sous-menu est masqué
                 subUl.style.display = "none";
-                // Gérer le clic sur la flèche
                 arrow.addEventListener("click", function (e) {
                     e.stopPropagation();
                     if (subUl.style.display === "none") {
@@ -170,18 +181,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Insère le TOC dans le menu, en dessous du lien cliqué
+    // Function to insert the TOC into the menu, below the clicked link
     function insertTOCInMenu(link, toc) {
-        // Récupère le <li> parent du lien
         const li = link.parentElement;
-        // Supprime un TOC existant dans le même conteneur, s'il existe
         const existingTOC = li.parentElement.querySelector(".toc");
         if (existingTOC) {
             existingTOC.remove();
         }
         if (toc) {
-            // Insère le TOC juste après le <li> dans le <ul>
             li.parentElement.insertBefore(toc, li.nextSibling);
         }
     }
+
+    // Initial load: if the URL contains /docs/..., attempt to load the corresponding markdown
+    (function initialLoad() {
+        const pathParts = location.pathname.split("/").filter(Boolean);
+        if (pathParts.length === 3 && pathParts[0] === "docs") {
+            const mdFile = pathParts[1] + "-" + pathParts[2] + ".md";
+            history.replaceState({ mdFile: mdFile }, "", location.pathname);
+            loadMarkdown(mdFile);
+        }
+    })();
 });
