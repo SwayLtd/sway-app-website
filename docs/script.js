@@ -16,21 +16,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         `#sidebar a[data-md="${mdFile}"]`,
                     );
                 }
-                // Insert the TOC in the menu only if activeLink is now defined
                 if (activeLink && toc) {
                     insertTOCInMenu(activeLink, toc);
                 }
                 // Automatically open the parent dropdown menu for the active link
                 if (activeLink) {
-                    // activeLink is inside a <li> in the submenu; its parent is the <ul>, and its parent is the main <li>
-                    const parentMainLi =
-                        activeLink.parentElement.parentElement.parentElement;
+                    const parentMainLi = activeLink.closest("ul.menu > li");
                     if (
                         parentMainLi &&
                         !parentMainLi.classList.contains("active")
                     ) {
                         parentMainLi.classList.add("active");
-                        // Update the arrow icon accordingly
                         const arrowIcon = parentMainLi.querySelector(
                             ".menu-title .arrow i",
                         );
