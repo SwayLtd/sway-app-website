@@ -3,11 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Documentation - Sway</title>
+    <title>Sway - Documentation</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/sway-app-favicon.ico">
     <base href="/docs/">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.min.css">
     <!-- Inclusion de Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SEO Meta -->
+    <meta name="description"
+        content="Sway is a mobile event management application that helps users discover, organize, and manage raves and festivals effortlessly. Discover comprehensive documentation for Sway here.">
+    <link rel="canonical" href="https://sway.events/docs/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Documentation - Sway">
+    <meta property="og:description"
+        content="Explore the documentation for Sway, the mobile event management application that helps you find raves and festivals.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sway.events/docs/">
+    <meta property="og:image" content="/assets/images/og-image.jpg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Documentation - Sway">
+    <meta name="twitter:description"
+        content="Explore the documentation for Sway, the mobile event management application that helps you find raves and festivals.">
+    <meta name="twitter:image" content="/assets/images/og-image.jpg">
 </head>
 
 <body>
@@ -91,7 +113,21 @@
     </div>
     <!-- Chargement de la librairie marked pour interpréter le markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="script.js"></script>
+    <script src="script.min.js"></script>
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Sway Documentation",
+          "url": "https://sway.events/docs/",
+          "description": "Comprehensive documentation for Sway, the mobile event management application that helps users discover, organize, and manage raves and festivals effortlessly.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Sway"
+          }
+        }
+    </script>
 </body>
 
 </html>
