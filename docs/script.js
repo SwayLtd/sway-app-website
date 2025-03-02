@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Function to load a markdown file and generate its TOC
     function loadMarkdown(mdFile) {
+        console.log("Loading markdown file:", mdFile);
         fetch(mdFile)
             .then((response) => response.text())
             .then((md) => {
@@ -47,13 +48,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let activeLink = null;
 
     // Handle clicks on menu links to load markdown and update the URL
+    // Exemple dans le clic sur un lien du menu
     document.querySelectorAll("#sidebar a[data-md]").forEach(function (link) {
         link.addEventListener("click", function (e) {
             e.preventDefault();
             activeLink = this;
-            const mdFile = this.getAttribute("data-md");
 
-            // Determine category from the parent menu (e.g., "create" or "manage-edit")
+            // Retrieve the category from the menu (e.g., "create")
             const categoryElem = this.closest("ul").closest("li").querySelector(
                 ".menu-text",
             );
@@ -62,16 +63,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 category = categoryElem.textContent.trim().toLowerCase()
                     .replace(/\s+/g, "-");
             }
-            // Get the page from the link text (e.g., "events")
+            // Retrieve the page from the link text (e.g., "events")
             const page = this.textContent.trim().toLowerCase().replace(
                 /\s+/g,
                 "-",
             );
 
-            // Build the new URL including the "docs" prefix (e.g. /docs/create/events)
-            const newUrl = "/docs/" + category + "/" + page;
+            // Build the complete markdown file path (e.g., "create/create-events.md")
+            const mdFile = category + "/" + category + "-" + page + ".md";
 
-            // Update the URL without reloading the page
+            const newUrl = "/docs/" + category + "/" + page;
             history.pushState({ mdFile: mdFile }, "", newUrl);
             loadMarkdown(mdFile);
         });
@@ -143,8 +144,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initial load: if the URL contains /docs/..., attempt to load the corresponding markdown
     (function initialLoad() {
         const pathParts = location.pathname.split("/").filter(Boolean);
+        // On s'attend à avoir ["docs", "create", "events"]
         if (pathParts.length === 3 && pathParts[0] === "docs") {
-            const mdFile = pathParts[1] + "-" + pathParts[2] + ".md";
+            // On enlève "docs" et on reconstruit le nom de fichier markdown
+            const mdFile = pathParts[1] + "/" + pathParts[1] + "-" +
+                pathParts[2] + ".md";
             history.replaceState({ mdFile: mdFile }, "", location.pathname);
             loadMarkdown(mdFile);
         }
