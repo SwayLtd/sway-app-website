@@ -10,8 +10,36 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Generate a flat TOC using only h2 headings
                 const toc = generateFlatTOC(contentContainer);
                 console.log("TOC generated:", toc);
-                // Insert the TOC in the menu
-                insertTOCInMenu(activeLink, toc);
+                // If activeLink is not set (e.g. initial load), set it by finding the matching menu link
+                if (!activeLink) {
+                    activeLink = document.querySelector(
+                        `#sidebar a[data-md="${mdFile}"]`,
+                    );
+                }
+                // Insert the TOC in the menu only if activeLink is now defined
+                if (activeLink && toc) {
+                    insertTOCInMenu(activeLink, toc);
+                }
+                // Automatically open the parent dropdown menu for the active link
+                if (activeLink) {
+                    // activeLink is inside a <li> in the submenu; its parent is the <ul>, and its parent is the main <li>
+                    const parentMainLi =
+                        activeLink.parentElement.parentElement.parentElement;
+                    if (
+                        parentMainLi &&
+                        !parentMainLi.classList.contains("active")
+                    ) {
+                        parentMainLi.classList.add("active");
+                        // Update the arrow icon accordingly
+                        const arrowIcon = parentMainLi.querySelector(
+                            ".menu-title .arrow i",
+                        );
+                        if (arrowIcon) {
+                            arrowIcon.classList.remove("fa-chevron-down");
+                            arrowIcon.classList.add("fa-chevron-up");
+                        }
+                    }
+                }
             })
             .catch((error) => {
                 document.getElementById("content").innerHTML =
