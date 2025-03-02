@@ -20,7 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     insertTOCInMenu(activeLink, toc);
                 }
                 // Automatically open the parent dropdown menu for the active link
+                // Automatically open the parent dropdown menu for the active link
                 if (activeLink) {
+                    // Find the main <li> that is a direct child of the menu (<ul class="menu">)
                     const parentMainLi = activeLink.closest("ul.menu > li");
                     if (
                         parentMainLi &&
