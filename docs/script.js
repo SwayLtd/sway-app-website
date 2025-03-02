@@ -1,18 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Function to load a markdown file and generate its nested TOC
+    // Function to load a markdown file and generate its TOC
     function loadMarkdown(mdFile) {
         fetch(mdFile)
             .then((response) => response.text())
             .then((md) => {
                 const contentContainer = document.getElementById("content");
                 contentContainer.innerHTML = marked.parse(md);
-                const toc = generateNestedTOC(contentContainer);
+                // Generate a flat TOC using only h2 headings
+                const toc = generateFlatTOC(contentContainer);
                 console.log("TOC generated:", toc);
                 // Insert the TOC in the menu
                 insertTOCInMenu(activeLink, toc);
-                if (toc) {
-                    addToggleArrows(toc);
-                }
             })
             .catch((error) => {
                 document.getElementById("content").innerHTML =
@@ -45,10 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Variable to keep track of the active link
+    // Variable to track the active link
     let activeLink = null;
 
-    // Handle clicks on menu links to load markdown and update URL
+    // Handle clicks on menu links to load markdown and update the URL
     document.querySelectorAll("#sidebar a[data-md]").forEach(function (link) {
         link.addEventListener("click", function (e) {
             e.preventDefault();
@@ -70,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "-",
             );
 
-            // Build the new URL including the "docs" prefix
+            // Build the new URL including the "docs" prefix (e.g. /docs/create/events)
             const newUrl = "/docs/" + category + "/" + page;
 
             // Update the URL without reloading the page
@@ -97,31 +95,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Function to generate a nested TOC from headings (h2, h3, h4)
-    function generateNestedTOC(container) {
-        const headings = Array.from(container.querySelectorAll("h2, h3, h4"));
+    // Function to generate a flat TOC using only h2 headings from the container
+    function generateFlatTOC(container) {
+        const headings = Array.from(container.querySelectorAll("h2"));
         console.log("Headings found:", headings);
         if (headings.length === 0) return null;
 
-        const rootUl = document.createElement("ul");
-        rootUl.className = "toc";
-
-        let currentLevel = 2; // Consider h2 as base level
-        let currentList = rootUl;
-        const listStack = [rootUl];
+        const ul = document.createElement("ul");
+        ul.className = "toc";
 
         headings.forEach((heading) => {
-            const level = parseInt(heading.tagName.charAt(1));
             if (!heading.id) {
                 heading.id = heading.textContent.trim().toLowerCase().replace(
                     /\s+/g,
                     "-",
                 );
             }
-
             const li = document.createElement("li");
-            li.className = "h" + level;
-
+            li.className = "h2";
             const a = document.createElement("a");
             a.href = "#" + heading.id;
             a.textContent = heading.textContent;
@@ -131,54 +122,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     behavior: "smooth",
                 });
             });
-
             li.appendChild(a);
-
-            if (level > currentLevel) {
-                const lastLi = currentList.lastElementChild;
-                if (lastLi) {
-                    const newUl = document.createElement("ul");
-                    newUl.style.display = "none"; // Hidden by default
-                    lastLi.appendChild(newUl);
-                    currentList = newUl;
-                    listStack.push(newUl);
-                    currentLevel = level;
-                }
-            } else if (level < currentLevel) {
-                while (currentLevel > level && listStack.length > 1) {
-                    listStack.pop();
-                    currentLevel--;
-                }
-                currentList = listStack[listStack.length - 1];
-            }
-            currentList.appendChild(li);
+            ul.appendChild(li);
         });
-        return rootUl;
-    }
-
-    // Function to add toggle arrows to each <li> in the TOC that has a submenu
-    function addToggleArrows(toc) {
-        const liItems = toc.querySelectorAll("li");
-        liItems.forEach((li) => {
-            const subUl = li.querySelector("ul");
-            if (subUl && !li.querySelector(".toc-arrow")) {
-                const arrow = document.createElement("span");
-                arrow.className = "toc-arrow";
-                arrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
-                li.insertBefore(arrow, li.firstChild);
-                subUl.style.display = "none";
-                arrow.addEventListener("click", function (e) {
-                    e.stopPropagation();
-                    if (subUl.style.display === "none") {
-                        subUl.style.display = "block";
-                        arrow.innerHTML = '<i class="fas fa-chevron-up"></i>';
-                    } else {
-                        subUl.style.display = "none";
-                        arrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
-                    }
-                });
-            }
-        });
+        return ul;
     }
 
     // Function to insert the TOC into the menu, below the clicked link
