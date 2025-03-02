@@ -6,10 +6,11 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Positionnement fixe et défilement interne pour le menu et les astuces */
+/* Sidebar ouverte */
 #sidebar {
     position: fixed;
     top: 0;
@@ -20,12 +21,27 @@ body {
     border-right: 1px solid #ddd;
     padding: 10px;
     overflow-y: auto;
-    transition: width 0.3s;
+    transition: width 0.3s, padding 0.3s;
 }
 
+/* Sidebar fermée */
 #sidebar.collapsed {
-    width: 50px;
+    width: 0;
+    padding: 0;
+    border: none;
+    overflow: hidden;
 }
+
+#sidebar.collapsed~#content {
+    margin-left: 50px;
+}
+
+/* Menu principal: links inside the dropdown (e.g., "Events", "Promoters") */
+#sidebar nav ul.menu>li>ul>li>a {
+    font-weight: 700;
+    font-size: 15px;
+}
+
 
 #tips {
     position: fixed;
@@ -49,9 +65,10 @@ body {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     line-height: 1.6;
+    transition: margin-left 0.3s;
 }
 
-/* Titres */
+/* Titres dans le contenu */
 #content h1,
 #content h2,
 #content h3,
@@ -131,15 +148,24 @@ body {
     text-align: left;
 }
 
-
-/* Bouton de basculement */
+/* Positionnement du bouton burger en dehors de la sidebar */
 #toggleSidebar {
-    background: none;
+    position: fixed;
+    bottom: 0;
+    left: 250px;
+    /* position quand la sidebar est ouverte */
+    z-index: 1000;
+    background-color: #f7f7f7;
     border: none;
+    padding: 5px 10px;
     cursor: pointer;
     font-size: 20px;
     color: #FFBC00;
-    margin-bottom: 10px;
+    transition: left 0.3s;
+}
+
+#sidebar.collapsed~#toggleSidebar {
+    left: 0;
 }
 
 /* Navigation et espacement du menu */
@@ -177,7 +203,6 @@ body {
     list-style: none;
     padding-left: 20px;
     padding-top: 10px;
-    /* Espacement entre le titre et le premier élément */
     overflow: hidden;
     max-height: 0;
     transition: max-height 0.3s ease;
@@ -200,9 +225,7 @@ body {
     margin-top: 10px;
     max-height: none !important;
     overflow: visible !important;
-    /* Optionnel, pour la visibilité */
 }
-
 
 .toc li {
     margin-bottom: 5px;
@@ -230,6 +253,18 @@ body {
 .toc li a {
     text-decoration: none;
     color: #333;
+}
+
+/* Style for main titles (h2) in the TOC: bold and 15px */
+.toc li.h2>a {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+/* For nested TOC items (levels other than h2), add a dash before the text */
+.toc li:not(.h2)>a::before {
+    content: "- ";
+    margin-right: 4px;
 }
 
 /* Styles pour les astuces */
