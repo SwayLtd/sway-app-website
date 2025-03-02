@@ -42,6 +42,20 @@ body {
     font-size: 15px;
 }
 
+/* Conteneur du logo centré */
+.logo-container {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* ajustez l'espacement si nécessaire */
+}
+
+/* Style du logo */
+.logo {
+    width: 100px;
+    /* ajustez la largeur selon vos préférences */
+    filter: invert(100%);
+}
 
 #tips {
     position: fixed;
