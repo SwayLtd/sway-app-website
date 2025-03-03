@@ -1,4 +1,4 @@
-/* Réinitialisation */
+/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -9,8 +9,7 @@ body {
     font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Positionnement fixe et défilement interne pour le menu et les astuces */
-/* Sidebar ouverte */
+/* Desktop Sidebar Open */
 #sidebar {
     position: fixed;
     top: 0;
@@ -24,7 +23,7 @@ body {
     transition: width 0.3s, padding 0.3s;
 }
 
-/* Sidebar fermée */
+/* Sidebar Collapsed */
 #sidebar.collapsed {
     width: 0;
     padding: 0;
@@ -36,27 +35,21 @@ body {
     margin-left: 50px;
 }
 
-/* Menu principal: links inside the dropdown (e.g., "Events", "Promoters") */
-#sidebar nav ul.menu>li>ul>li>a {
-    font-weight: 700;
-    font-size: 15px;
-}
-
-/* Conteneur du logo centré */
+/* Logo Container */
 .logo-container {
     text-align: center;
     margin-top: 20px;
     margin-bottom: 20px;
-    /* ajustez l'espacement si nécessaire */
 }
 
-/* Style du logo */
+/* Logo Style (desktop) */
 .logo {
     width: 100px;
-    /* ajustez la largeur selon vos préférences */
+    /* In desktop the logo is inverted as per old style */
     filter: invert(100%);
 }
 
+/* Tips Area (desktop) */
 #tips {
     position: fixed;
     top: 0;
@@ -69,8 +62,22 @@ body {
     overflow-y: auto;
 }
 
-/* Contenu principal avec marges pour éviter le chevauchement */
-/* Styles pour le contenu Markdown */
+/* Tips item style */
+.tip {
+    background-color: #FFBC00;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.tip i {
+    margin-right: 5px;
+}
+
+/* Main Content Area */
 #content {
     background-color: #fff;
     padding: 20px;
@@ -82,7 +89,7 @@ body {
     transition: margin-left 0.3s;
 }
 
-/* Titres dans le contenu */
+/* Headings in Content */
 #content h1,
 #content h2,
 #content h3,
@@ -95,19 +102,19 @@ body {
     line-height: 1.2;
 }
 
-/* Paragraphes */
+/* Paragraphs */
 #content p {
     margin-bottom: 1em;
 }
 
-/* Listes */
+/* Lists */
 #content ul,
 #content ol {
     margin-left: 1.5em;
     margin-bottom: 1em;
 }
 
-/* Liens */
+/* Links */
 #content a {
     color: #FFBC00;
     text-decoration: none;
@@ -117,7 +124,7 @@ body {
     text-decoration: underline;
 }
 
-/* Blocs de code */
+/* Code Blocks */
 #content pre {
     background-color: #f4f4f4;
     padding: 10px;
@@ -126,7 +133,7 @@ body {
     margin-bottom: 1em;
 }
 
-/* Code inline */
+/* Inline Code */
 #content code {
     background-color: #f4f4f4;
     padding: 2px 4px;
@@ -134,7 +141,7 @@ body {
     font-family: Consolas, monospace;
 }
 
-/* Citations */
+/* Blockquotes */
 #content blockquote {
     border-left: 4px solid #ddd;
     padding-left: 15px;
@@ -143,7 +150,7 @@ body {
     font-style: italic;
 }
 
-/* Tableaux (optionnel) */
+/* Tables */
 #content table {
     width: 100%;
     border-collapse: collapse;
@@ -162,12 +169,11 @@ body {
     text-align: left;
 }
 
-/* Positionnement du bouton burger en dehors de la sidebar */
+/* Burger Button Position (Desktop) */
 #toggleSidebar {
     position: fixed;
     bottom: 0;
     left: 250px;
-    /* position quand la sidebar est ouverte */
     z-index: 1000;
     background-color: #f7f7f7;
     border: none;
@@ -182,7 +188,7 @@ body {
     left: 0;
 }
 
-/* Navigation et espacement du menu */
+/* Navigation Menu */
 #sidebar nav ul.menu {
     list-style: none;
     padding: 10px;
@@ -193,9 +199,9 @@ body {
     overflow: hidden;
 }
 
-/* Titre principal du menu aligné à gauche */
+/* Main Menu Title - now with font-weight 700 */
 .menu-title {
-    font-weight: bold;
+    font-weight: 700;
     color: #FFBC00;
     cursor: pointer;
     display: flex;
@@ -212,7 +218,13 @@ body {
     margin-right: 5px;
 }
 
-/* Sous-menu animé via max-height, fermé par défaut */
+/* Submenu links (first level) in dropdown */
+#sidebar nav ul.menu>li>ul>li>a {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* Animated Submenu via max-height, hidden by default */
 #sidebar nav ul.menu ul {
     list-style: none;
     padding-left: 20px;
@@ -233,10 +245,12 @@ body {
     padding: 5px 0;
 }
 
-/* Styles pour le TOC (table des matières) imbriqué */
+/* TOC (Table of Contents) Styles */
 .toc {
     list-style: none;
-    margin-top: 10px;
+    margin: 0;
+    /* Removed top margin */
+    padding-left: 0;
     max-height: none !important;
     overflow: visible !important;
 }
@@ -246,18 +260,18 @@ body {
     position: relative;
 }
 
-/* Les sous-listes du TOC sont cachées par défaut */
+/* Nested TOC lists hidden by default */
 .toc ul {
     display: none;
     padding-left: 15px;
 }
 
-/* Lorsque le li est actif, on affiche la sous-liste */
+/* When active, show nested TOC lists */
 .toc li.active>ul {
     display: block;
 }
 
-/* Style pour les flèches dans le TOC */
+/* TOC arrow style */
 .toc li .toc-arrow {
     cursor: pointer;
     margin-right: 5px;
@@ -269,29 +283,72 @@ body {
     color: #333;
 }
 
-/* Style for main titles (h2) in the TOC: bold and 15px */
+/* Main TOC titles (h2) */
 .toc li.h2>a {
     font-weight: normal;
     font-size: 14px;
 }
 
-/* For nested TOC items (levels other than h2), add a dash before the text */
+/* For nested TOC items, add a dash before the text */
 .toc li:not(.h2)>a::before {
     content: "- ";
     margin-right: 4px;
 }
 
-/* Styles pour les astuces */
-.tip {
-    background-color: #FFBC00;
-    color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-}
+/* ---------------------- */
+/* Mobile Specific Styles */
+/* ---------------------- */
+@media (max-width: 768px) {
 
-.tip i {
-    margin-right: 5px;
+    /* Sidebar becomes a full-screen overlay */
+    #sidebar {
+        width: 100%;
+        height: 100%;
+        left: -100%;
+        top: 0;
+        transition: left 0.3s ease;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        z-index: 1100;
+        padding: 10px;
+    }
+
+    #sidebar.mobile-active {
+        left: 0;
+    }
+
+    /* Main content occupies full width without margins */
+    #content {
+        margin: 0;
+        padding: 20px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* Hide tips area in mobile */
+    #tips {
+        display: none;
+    }
+
+    /* Burger button positioned flush at top-right */
+    #toggleSidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: auto;
+        bottom: auto;
+        margin: 0;
+        padding: 10px;
+        /* Increased padding for larger touch area */
+        background: none;
+        /* No background color */
+        font-size: 28px;
+        /* Slightly larger icon */
+        z-index: 1200;
+    }
+
+    /* In mobile, invert the logo color */
+    #sidebar .logo {
+        filter: invert(1);
+    }
 }
