@@ -8,7 +8,7 @@
 	<url>
 		<loc>https://www.sway.events/artist</loc>
 		<priority>0.50</priority>
-		<lastmod>2025-03-05</lastmod>
+		<lastmod>2025-04-04</lastmod>
 	</url>
 	<url>
 		<loc>https://www.sway.events/auth-callback.html</loc>
@@ -28,12 +28,12 @@
 	<url>
 		<loc>https://www.sway.events/event</loc>
 		<priority>0.50</priority>
-		<lastmod>2024-11-23</lastmod>
+		<lastmod>2025-04-04</lastmod>
 	</url>
 	<url>
 		<loc>https://www.sway.events/genre</loc>
 		<priority>0.50</priority>
-		<lastmod>2024-11-23</lastmod>
+		<lastmod>2025-04-04</lastmod>
 	</url>
 	<url>
 		<loc>https://www.sway.events/privacy</loc>
@@ -43,16 +43,16 @@
 	<url>
 		<loc>https://www.sway.events/promoter</loc>
 		<priority>0.50</priority>
-		<lastmod>2024-11-23</lastmod>
+		<lastmod>2025-04-04</lastmod>
 	</url>
 	<url>
 		<loc>https://www.sway.events/user</loc>
 		<priority>0.50</priority>
-		<lastmod>2024-11-23</lastmod>
+		<lastmod>2025-04-04</lastmod>
 	</url>
 	<url>
 		<loc>https://www.sway.events/venue</loc>
 		<priority>0.50</priority>
-		<lastmod>2024-11-23</lastmod>
+		<lastmod>2025-04-04</lastmod>
 	</url>
 </urlset>

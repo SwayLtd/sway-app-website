@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Sway - Helping your find raves and afters</title>
@@ -7,7 +8,8 @@
         content="Sway is a mobile event management application that helps users discover, organize, and manage events effortlessly. Sway aims to provide a seamless and intuitive experience for both event attendees and promoters.">
     <link rel="icon" type="image/x-icon" href="/assets/images/sway-app-favicon.ico">
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -20,7 +22,8 @@
         }
 
         .logo {
-            width: 400px; /* Adjust size as needed */
+            width: 400px;
+            /* Adjust size as needed */
             height: 400px;
             opacity: 1;
             animation: pulse 2s infinite;
@@ -45,10 +48,12 @@
                 transform: scale(1);
                 opacity: 1;
             }
+
             50% {
                 transform: scale(0.9);
                 opacity: 0.6;
             }
+
             100% {
                 transform: scale(1);
                 opacity: 1;
@@ -56,7 +61,7 @@
         }
     </style>
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             function isMobileDevice() {
                 return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             }
@@ -76,7 +81,7 @@
             if (entityType && entityId) {
                 if (isMobileDevice()) {
                     // Redirect to the app via deep link
-                    var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
+                    var deepLinkUrl = "app.sway.main://sway.events/" + entityType + "/" + entityId;
                     window.location.href = deepLinkUrl;
                 } else {
                     // Display message to non-mobile users
@@ -89,6 +94,7 @@
         });
     </script>
 </head>
+
 <body>
     <img src="/assets/images/sway-app.png" alt="Sway Logo" class="logo">
     <p id="loadingText" class="loading-text">Loading...</p>
@@ -96,4 +102,5 @@
         The web version of Sway App is not yet available.<br>Please check back soon, or open the app on your phone!
     </p>
 </body>
+
 </html>
