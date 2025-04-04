@@ -81,7 +81,7 @@
             if (entityType && entityId) {
                 if (isMobileDevice()) {
                     // Redirect to the app via deep link
-                    var deepLinkUrl = "app.sway.main://sway.events/" + entityType + "/" + entityId;
+                    var deepLinkUrl = "app.sway.main://app/" + entityType + "/" + entityId;
                     window.location.href = deepLinkUrl;
                 } else {
                     // Display message to non-mobile users
