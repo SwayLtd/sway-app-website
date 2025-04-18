@@ -513,11 +513,16 @@ ul {
     }
 
     .mobile-header .get-app-btn {
+        -webkit-appearance: none;
+        appearance: none;
         background-color: #FFBC00;
         border: none;
         padding: 8px 12px;
         font-weight: bold;
         border-radius: 4px;
+        color: #000;
+        /* ou #fff, selon ce qui contraste le mieux */
+        cursor: pointer;
     }
 
     .sway-logo,
