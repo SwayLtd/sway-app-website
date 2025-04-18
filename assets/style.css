@@ -496,6 +496,16 @@ ul {
         height: auto !important;
     }
 
+    /* Empêche le bounce/rubber-band et la propagation du scroll */
+    html,
+    body,
+    #scroll-container,
+    #horizontal-section {
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+        /* n’autorise que le scroll vertical natif */
+    }
+
     /* Affichage du menu mobile en haut */
     .mobile-header {
         display: flex;
@@ -539,6 +549,7 @@ ul {
         overflow: visible;
         margin: 0;
         padding: 0;
+        -webkit-overflow-scrolling: touch;
     }
 
     /* Aplatir les conteneurs pour que leurs enfants soient des items directs */

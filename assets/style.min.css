@@ -432,6 +432,14 @@ ul {
         height: auto !important
     }
 
+    #horizontal-section,
+    #scroll-container,
+    body,
+    html {
+        overscroll-behavior: contain;
+        touch-action: pan-y
+    }
+
     .mobile-header {
         display: flex;
         justify-content: space-between;
@@ -466,7 +474,8 @@ ul {
         flex-direction: column;
         overflow: visible;
         margin: 0;
-        padding: 0
+        padding: 0;
+        -webkit-overflow-scrolling: touch
     }
 
     #horizontal-section,
