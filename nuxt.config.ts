@@ -31,8 +31,22 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@unlok-co/nuxt-stripe',
     '@nuxtjs/supabase',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots'
   ],
+// Exemple de configuration pour @nuxtjs/sitemap
+sitemap: {
+  siteUrl: 'https://sway.events',
+  // Ajoute d'autres options si besoin (routes dynamiques, etc.)
+},
+
+// Exemple de configuration pour @nuxtjs/robots
+robots: {
+  UserAgent: '*',
+  Disallow: '',
+  Sitemap: 'https://sway.events/sitemap.xml',
+},
 
   image: {
     provider: "netlify",

@@ -23,6 +23,8 @@
     "@nuxt/icon": "^1.13.0",
     "@nuxt/image": "^1.9.0",
     "@nuxt/ui": "^3.0.0",
+    "@nuxtjs/robots": "^5.2.11",
+    "@nuxtjs/sitemap": "^7.4.3",
     "@nuxtjs/supabase": "^1.5.0",
     "@stripe/stripe-js": "^7.3.1",
     "@tailwindcss/vite": "^4.1.10",
