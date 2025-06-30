@@ -76,6 +76,11 @@ export const useAdminSidebar = () => {
             icon: 'cog'
         }),
         createMenuItem({
+            label: 'Artists',
+            path: `/admin/event/${eventId}/artists`,
+            icon: 'users'
+        }),
+        createMenuItem({
             label: 'Tickets',
             path: `/admin/event/${eventId}/tickets`,
             icon: 'ticket'
