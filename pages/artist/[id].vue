@@ -1,19 +1,49 @@
 <script setup lang="ts">
-import { useRoute, useHead } from '#imports'
-import { onMounted, ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useSeoMeta, useSupabaseClient } from '#imports'
 
 const route = useRoute()
 const entityId = route.params.id as string
 const isMobile = ref(false)
+const supabase = useSupabaseClient()
 
-useHead({
-  title: `Sway App - Loading artist...`,
-  meta: [
-    {
-      name: 'description',
-      content: 'Sway is a mobile event management application that helps users discover, organize, and manage events effortlessly. Sway aims to provide a seamless and intuitive experience for both event attendees and promoters.'
-    }
-  ]
+const artist = ref<any>(null)
+
+async function fetchArtist() {
+  const { data, error } = await supabase
+    .from('artists')
+    .select('id, name, description, image_url')
+    .eq('id', entityId)
+    .maybeSingle()
+  if (!error && data) artist.value = data
+}
+await fetchArtist()
+
+const artistName = computed(() => artist.value?.name || '')
+const artistDescription = computed(() => artist.value?.description || '')
+const artistImage = computed(() => {
+  const url = artist.value?.image_url
+  if (!url) return '/images/default-artist.jpg'
+  return url.startsWith('http') ? url : `${url.startsWith('/') ? '' : '/'}${url}`
+})
+
+const BASE_URL = useRuntimeConfig().public.BASE_URL
+const pageUrl = computed(() => `${BASE_URL}/artist/${entityId}`)
+
+useSeoMeta({
+  title: artistName.value ? `${artistName.value} - Sway` : 'Sway',
+  ogTitle: artistName.value ? `${artistName.value} - Sway` : 'Sway',
+  twitterTitle: artistName.value ? `${artistName.value} - Sway` : 'Sway',
+  description: artistDescription.value,
+  ogDescription: artistDescription.value,
+  twitterDescription: artistDescription.value,
+  ogImage: artistImage.value,
+  twitterImage: artistImage.value,
+  ogUrl: pageUrl.value,
+  twitterCard: 'summary_large_image',
+  ogType: 'website',
+  robots: 'index, follow',
 })
 
 onMounted(() => {
@@ -25,12 +55,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="artist-page">
-    <img src="/images/sway-app.png" alt="Sway Logo" class="logo" loading="eager" />
-    <p class="loading-text">Loading artist...</p>
-    <p v-if="!isMobile" class="message">
-      The web version of Sway App is not yet available.<br />Please check back soon, or open the app on your phone!
-    </p>
+  <div class="min-h-screen flex flex-col justify-center items-center bg-white">
+    <div class="card bg-base-100 shadow-xl w-full max-w-xl">
+      <figure v-if="artistImage" class="pt-6">
+        <img :src="artistImage" :alt="artistName" class="rounded-xl w-64 h-64 object-cover" loading="eager">
+      </figure>
+      <div class="card-body items-center text-center">
+        <h1 class="card-title text-3xl font-bold mb-2">{{ artistName }}</h1>
+        <p v-if="artistDescription" class="mb-4 text-base-content/80">{{ artistDescription }}</p>
+        <div v-if="!isMobile" class="alert alert-info mt-4">
+          The web version of Sway App is not yet available.<br>Please check back soon, or open the app on your phone!
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

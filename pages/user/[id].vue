@@ -1,38 +1,66 @@
 <script setup lang="ts">
-import { useRoute, useHead } from '#imports'
-import { onMounted, ref } from 'vue'
+import { useRoute, useSeoMeta, useSupabaseClient } from '#imports'
+import { onMounted, ref, computed } from 'vue'
 
 const route = useRoute()
 const entityId = route.params.id as string | undefined
 const isMobile = ref(false)
 
-const entityType = 'user'
 
-useHead({
-  title: entityId ? `Sway App - Loading ${entityType}...` : 'Sway - Helping you find raves and afters',
-  meta: [
-    {
-      name: 'description',
-      content: 'Sway is a mobile event management application that helps users discover, organize, and manage events effortlessly. Sway aims to provide a seamless and intuitive experience for both event attendees and promoters.'
-    }
-  ]
+const supabase = useSupabaseClient()
+const user = ref<any>(null)
+
+async function fetchUser() {
+  if (!entityId) return
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, username, profile_picture_url, bio')
+    .eq('id', entityId)
+    .maybeSingle()
+  if (!error && data) user.value = data
+}
+await fetchUser()
+
+const userName = computed(() => user.value?.username || 'User')
+const userImage = computed(() => user.value?.profile_picture_url || '/images/sway-app.png')
+const userBio = computed(() => user.value?.bio || '')
+
+useSeoMeta({
+  title: userName.value ? `${userName.value} - Sway` : 'Sway User - Sway',
+  ogTitle: userName.value ? `${userName.value} - Sway` : 'Sway User - Sway',
+  twitterTitle: userName.value ? `${userName.value} - Sway` : 'Sway User - Sway',
+  description: userBio.value || 'Sway user profile on Sway App.',
+  ogDescription: userBio.value || 'Sway user profile on Sway App.',
+  twitterDescription: userBio.value || 'Sway user profile on Sway App.',
+  ogImage: userImage.value,
+  twitterImage: userImage.value,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  robots: 'index, follow',
 })
 
 onMounted(() => {
   isMobile.value = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   if (entityId && isMobile.value) {
-    window.location.href = `app.sway.main://app/${entityType}/${entityId}`
+    window.location.href = `app.sway.main://app/user/${entityId}`
   }
 })
 </script>
 
 <template>
-  <div class="user-page">
-    <img src="/images/sway-app.png" alt="Sway Logo" class="logo" loading="eager" />
-    <p class="loading-text">Loading user...</p>
-    <p v-if="entityId && !isMobile" class="message">
-      The web version of Sway App is not yet available.<br />Please check back soon, or open the app on your phone!
-    </p>
+  <div class="min-h-screen flex flex-col justify-center items-center bg-white">
+    <div class="card bg-base-100 shadow-xl w-full max-w-xl">
+      <figure v-if="userImage" class="pt-6">
+        <img :src="userImage" :alt="userName" class="rounded-xl w-64 h-64 object-cover" loading="eager">
+      </figure>
+      <div class="card-body items-center text-center">
+        <h1 class="card-title text-3xl font-bold mb-2">{{ userName }}</h1>
+        <p v-if="userBio" class="mb-4 text-base-content/80 max-w-prose w-full mx-auto">{{ userBio }}</p>
+        <div v-if="entityId && !isMobile" class="alert alert-info mt-4">
+          The web version of Sway App is not yet available.<br>Please check back soon, or open the app on your phone!
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
