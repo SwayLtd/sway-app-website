@@ -35,22 +35,28 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
     '@nuxtjs/robots'
   ],
-// Exemple de configuration pour @nuxtjs/sitemap
-sitemap: {
-  siteUrl: 'https://sway.events',
-  // Ajoute d'autres options si besoin (routes dynamiques, etc.)
-},
+  // Exemple de configuration pour @nuxtjs/sitemap
+  sitemap: {
+    siteUrl: 'https://sway.events',
+    // Ajoute d'autres options si besoin (routes dynamiques, etc.)
+  },
 
-// Exemple de configuration pour @nuxtjs/robots
-robots: {
-  UserAgent: '*',
-  Disallow: '',
-  Sitemap: 'https://sway.events/sitemap.xml',
-},
+  // Exemple de configuration pour @nuxtjs/robots
+  robots: {
+    UserAgent: '*',
+    Disallow: '',
+    Sitemap: 'https://sway.events/sitemap.xml',
+  },
 
   image: {
-    provider: "netlify",
-    domains: ["test.sway.events", "sway.events"],
+    provider: process.env.NODE_ENV === 'production' ? 'netlify' : 'ipx',
+    domains: [
+      'localhost',
+      'localhost:3000',
+      'sway.events',
+      'test.sway.events',
+      'gvuwtsdhgqefamzyfyjm.supabase.co'
+    ]
   },
 
   // https://github.com/supabase/supabase/issues/16551

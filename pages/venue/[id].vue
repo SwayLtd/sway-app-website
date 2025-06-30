@@ -58,7 +58,7 @@ onMounted(() => {
   <div class="min-h-screen flex flex-col justify-center items-center bg-white">
     <div class="card bg-base-100 shadow-xl w-full max-w-xl">
       <figure v-if="venueImage" class="pt-6">
-        <img :src="venueImage" :alt="venueName" class="rounded-xl w-64 h-64 object-cover" loading="eager">
+        <NuxtImg :src="venueImage" :alt="venueName" class="rounded-xl w-64 h-64 object-cover" loading="lazy" />
       </figure>
       <div class="card-body items-center text-center">
         <h1 class="card-title text-3xl font-bold mb-2">{{ venueName }}</h1>

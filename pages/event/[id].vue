@@ -341,7 +341,18 @@ const eventMetadata = computed(() => {
         <!-- En-tête de l'événement -->
         <div v-if="eventInfo" class="eventHeader">
             <div v-if="eventInfo.image_url" class="eventImage">
-                <img :src="eventInfo.image_url" :alt="eventInfo.title">
+                <NuxtImg
+                  :src="eventInfo.image_url"
+                  :alt="eventInfo.title"
+                  class="w-full h-full object-cover"
+                  width="600"
+                  height="338"
+                  format="webp"
+                  loading="lazy"
+                  densities="x1 x2"
+                  :placeholder="eventInfo.image_url !== '/images/default-event.jpg' ? 'blur' : undefined"
+                  :quality="80"
+                />
             </div>
             <div class="eventInfo">
                 <h1>{{ eventInfo.title }}</h1>

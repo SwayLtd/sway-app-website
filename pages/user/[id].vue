@@ -51,7 +51,18 @@ onMounted(() => {
   <div class="min-h-screen flex flex-col justify-center items-center bg-white">
     <div class="card bg-base-100 shadow-xl w-full max-w-xl">
       <figure v-if="userImage" class="pt-6">
-        <img :src="userImage" :alt="userName" class="rounded-xl w-64 h-64 object-cover" loading="eager">
+        <NuxtImg
+          :src="userImage"
+          :alt="userName"
+          class="rounded-xl w-64 h-64 object-cover"
+          width="256"
+          height="256"
+          format="webp"
+          loading="lazy"
+          densities="x1 x2"
+          :placeholder="userImage !== '/images/sway-app.png' ? 'blur' : undefined"
+          :quality="80"
+        />
       </figure>
       <div class="card-body items-center text-center">
         <h1 class="card-title text-3xl font-bold mb-2">{{ userName }}</h1>

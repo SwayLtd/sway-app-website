@@ -49,7 +49,7 @@ useSeoMeta({
 onMounted(() => {
   isMobile.value = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   if (entityId && isMobile.value) {
-    window.location.href = `app.sway.main://app/promoter/${entityId}`
+    window.location.href = `app.sway.main://app/${entityType}/${entityId}`
   }
 })
 </script>
@@ -58,7 +58,7 @@ onMounted(() => {
   <div class="min-h-screen flex flex-col justify-center items-center bg-white">
     <div class="card bg-base-100 shadow-xl w-full max-w-xl">
       <figure v-if="promoterImage" class="pt-6">
-        <img :src="promoterImage" :alt="promoterName" class="rounded-xl w-64 h-64 object-cover" loading="eager">
+        <NuxtImg :src="promoterImage" :alt="promoterName" class="rounded-xl w-64 h-64 object-cover" loading="lazy" />
       </figure>
       <div class="card-body items-center text-center">
         <h1 class="card-title text-3xl font-bold mb-2">{{ promoterName }}</h1>
