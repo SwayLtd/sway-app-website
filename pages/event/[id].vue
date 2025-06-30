@@ -60,8 +60,12 @@ const userDisplay = computed(() => {
     return username.value || user.value?.email || ''
 })
 
+
 // Récupération de l'événement
 const eventInfo = ref<any>(null)
+const eventVenueId = ref<number|null>(null)
+const venueName = ref('')
+
 async function fetchEvent() {
     const { data, error } = await supabase
         .from('events')
@@ -72,6 +76,37 @@ async function fetchEvent() {
     eventInfo.value = data
 }
 await fetchEvent()
+
+// Récupération du venue_id via event_venue, puis du nom du lieu
+async function fetchVenue() {
+    if (!eventInfo.value) return
+    // 1. Chercher le lien event_venue
+    const { data: eventVenue, error: evError } = await supabase
+        .from('event_venue')
+        .select('venue_id')
+        .eq('event_id', eventId)
+        .maybeSingle()
+    console.log('[eventVenue]', eventVenue)
+    if (evError) {
+        console.error('Erreur event_venue:', evError)
+        return
+    }
+    eventVenueId.value = eventVenue?.venue_id ? String(eventVenue.venue_id) : null
+    if (!eventVenueId.value) {
+        return
+    }
+    // 2. Chercher le nom du lieu (cast id en integer)
+    const { data: venue, error: vError } = await supabase
+        .from('venues')
+        .select('name')
+        .eq('id', Number(eventVenueId.value))
+        .maybeSingle()
+    if (vError) {
+        return
+    }
+    venueName.value = venue?.name || ''
+}
+await fetchVenue()
 
 // Récupération des produits (tickets) liés à l'événement
 const productsData = ref<any[]>([])
@@ -152,10 +187,45 @@ const grandTotal = computed(() => {
 const stripeFeeCents = computed(() => Math.round(stripeFee.value * 100));
 const netCommissionCents = computed(() => Math.round(netCommission.value * 100));
 
-// Formatage de la date
+
+// Formatage de la date (pour preview et affichage)
 const formatDate = (dateStr: string) => {
     return format(new Date(dateStr), 'EEEE dd MMM yyyy, HH:mm')
 }
+// Format court pour preview
+const formatDateShort = (dateStr: string) => {
+    return format(new Date(dateStr), 'dd MMM yyyy')
+}
+// --- SEO & Social Preview ---
+import { useSeoMeta } from '#imports'
+const eventUrl = computed(() => `${BASE_URL}/event/${eventId}`)
+const previewTitle = computed(() => {
+    if (!eventInfo.value) return ''
+    return eventInfo.value.title ? `${eventInfo.value.title} - Sway` : 'Sway'
+})
+const previewVenue = computed(() => venueName.value ? ` in ${venueName.value}` : '')
+const previewDate = computed(() => eventInfo.value?.date_time ? formatDateShort(eventInfo.value.date_time) : '')
+const previewText = computed(() => {
+    if (!eventInfo.value) return ''
+    return `${eventInfo.value.title}${previewVenue.value}${previewDate.value ? ' - ' + previewDate.value : ''}`
+})
+const previewImage = computed(() => eventInfo.value?.image_url || '/images/default-event.jpg')
+
+useSeoMeta({
+  title: previewTitle.value,
+  ogTitle: previewTitle.value,
+  twitterTitle: previewTitle.value,
+  description: previewText.value,
+  ogDescription: previewText.value,
+  twitterDescription: previewText.value,
+  ogImage: previewImage.value,
+  twitterImage: previewImage.value,
+  ogUrl: eventUrl.value,
+  twitterCard: 'summary_large_image',
+  ogType: 'website',
+  canonical: eventUrl.value,
+  robots: 'index, follow',
+})
 
 // Gestion de l'email pour les utilisateurs non connectés
 const email = ref('')
@@ -280,6 +350,9 @@ const eventMetadata = computed(() => {
                     <span v-if="eventInfo.end_date_time">
                         - {{ formatDate(eventInfo.end_date_time) }}
                     </span>
+                </p>
+                <p v-if="venueName" class="venueDisplay text-base-content/80 text-sm mt-1">
+                    {{ venueName }}
                 </p>
             </div>
         </div>
