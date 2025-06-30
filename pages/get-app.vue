@@ -1,5 +1,20 @@
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useSeoMeta } from '#imports'
+
+useSeoMeta({
+  title: 'Get Sway – Download the app',
+  ogTitle: 'Get Sway – Download the app',
+  description: 'Download the Sway app for Android or iOS. Find raves and festivals, manage your tickets, and join the community!',
+  ogDescription: 'Download the Sway app for Android or iOS. Find raves and festivals, manage your tickets, and join the community!',
+  ogImage: '/images/og-image.jpg',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'Get Sway – Download the app',
+  twitterDescription: 'Download the Sway app for Android or iOS. Find raves and festivals, manage your tickets, and join the community!',
+  twitterImage: '/images/og-image.jpg',
+  robots: 'index, follow',
+})
 
 
 // Utilisation de $gtag (vue-gtag-next)
