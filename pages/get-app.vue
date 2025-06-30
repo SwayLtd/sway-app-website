@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-// Google Analytics tracking (gtag.js)
+
+// Utilisation de $gtag (vue-gtag-next)
+import { useNuxtApp } from '#app'
+const nuxtApp = useNuxtApp()
 function trackEvent(action: string, label: string) {
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', action, {
+  if (nuxtApp.$gtag) {
+    nuxtApp.$gtag.event(action, {
       event_category: 'GetApp',
       event_label: label
     })

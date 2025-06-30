@@ -50,6 +50,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/qrcode": "^1.5.5",
     "@vitejs/plugin-basic-ssl": "^2.0.0",
-    "daisyui": "^5.0.43"
+    "daisyui": "^5.0.43",
+    "vue-gtag-next": "^1.14.0"
   }
 }
