@@ -275,9 +275,13 @@ function getArtistsAt(stage: string, slot: string) {
   )
 }
 
-// List view sorted
+// List view sorted by stage then start_time
 const sortedList = computed(() => {
-  return [...timetable.value].sort((a, b) => a.start_time.localeCompare(b.start_time))
+  return [...timetable.value].sort((a, b) => {
+    if (a.stage < b.stage) return -1
+    if (a.stage > b.stage) return 1
+    return a.start_time.localeCompare(b.start_time)
+  })
 })
 
 function formatTime(dt: string) {
