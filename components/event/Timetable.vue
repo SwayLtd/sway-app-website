@@ -10,24 +10,33 @@
           </select>
         </label>
       </div>
-      <div class="btn-group mt-2 sm:mt-0">
+      <div class="btn-group flex flex-row gap-2 mt-2 sm:mt-0">
         <button
-          class="btn btn-outline btn-primary flex items-center gap-2"
+          class="btn btn-outline btn-primary flex items-center justify-center"
           :class="{ 'btn-active': view === 'grid' }"
           aria-label="Grid view"
           @click="setView('grid')"
         >
-          <span class="hidden sm:inline"><i class="fa-regular fa-table"></i> Grid</span>
-          <span class="sm:hidden"><i class="fa-regular fa-table"></i></span>
+          <!-- Icône grille SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="2" class="fill-base-200" />
+            <rect x="14" y="3" width="7" height="7" rx="2" class="fill-base-200" />
+            <rect x="14" y="14" width="7" height="7" rx="2" class="fill-base-200" />
+            <rect x="3" y="14" width="7" height="7" rx="2" class="fill-base-200" />
+          </svg>
         </button>
         <button
-          class="btn btn-outline btn-primary flex items-center gap-2"
+          class="btn btn-outline btn-primary flex items-center justify-center"
           :class="{ 'btn-active': view === 'list' }"
           aria-label="List view"
           @click="setView('list')"
         >
-          <span class="hidden sm:inline"><i class="fa-regular fa-list"></i> List</span>
-          <span class="sm:hidden"><i class="fa-regular fa-list"></i></span>
+          <!-- Icône liste SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="4" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
         </button>
       </div>
     </div>
@@ -47,10 +56,30 @@
           <tr v-for="stage in stages" :key="stage" class="h-40">
             <td class="font-bold align-middle">{{ stage }}</td>
             <td v-for="slot in timeSlots" :key="slot">
-              <div v-for="item in getArtistsAt(stage, slot)" :key="item.id" class="card bg-base-100 shadow-sm p-4 mb-1 flex flex-col items-center min-h-24">
-                <img v-if="item.artist && item.artist.image_url" :src="item.artist.image_url" :alt="item.artist.name" class="w-16 h-16 rounded-full mb-1" />
-                <span class="font-semibold text-xs">{{ item.artist && item.artist.name ? item.artist.name : 'Unknown artist' }}</span>
-                <span class="badge badge-ghost badge-xs mt-1">{{ formatTime(item.start_time) }} - {{ formatTime(item.end_time) }}</span>
+              <div v-if="getArtistsAt(stage, slot).length > 0" class="card bg-base-100 shadow-sm p-4 mb-1 flex flex-col items-center min-h-24">
+                <template v-if="getArtistsAt(stage, slot).length === 1">
+                  <img v-if="getArtistsAt(stage, slot)[0].artist && getArtistsAt(stage, slot)[0].artist.image_url" :src="getArtistsAt(stage, slot)[0].artist.image_url" :alt="getArtistsAt(stage, slot)[0].artist.name" class="w-16 h-16 rounded-full mb-1" />
+                  <span class="font-semibold text-xs">{{ getArtistsAt(stage, slot)[0].artist && getArtistsAt(stage, slot)[0].artist.name ? getArtistsAt(stage, slot)[0].artist.name : 'Unknown artist' }}</span>
+                  <span class="badge badge-ghost badge-xs mt-1">{{ formatTime(getArtistsAt(stage, slot)[0].start_time) }} - {{ formatTime(getArtistsAt(stage, slot)[0].end_time) }}</span>
+                </template>
+                <template v-else>
+                  <img
+                    v-if="b2bCurrentIdx[`${stage}|${slot}`] !== undefined && getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist && getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist.image_url"
+                    :src="getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist.image_url"
+                    :alt="getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist.name"
+                    class="w-16 h-16 rounded-full mb-1"
+                  />
+                  <span class="font-semibold text-xs">
+                    {{
+                      getArtistsAt(stage, slot)[0].custom_name
+                        ? getArtistsAt(stage, slot)[0].custom_name
+                        : getArtistsAt(stage, slot).map(a => a.artist?.name).filter(Boolean).join(' B2B ')
+                    }}
+                  </span>
+                  <span class="badge badge-ghost badge-xs mt-1">
+                    {{ formatTime(getArtistsAt(stage, slot)[0].start_time) }} - {{ formatTime(getArtistsAt(stage, slot)[0].end_time) }}
+                  </span>
+                </template>
               </div>
             </td>
           </tr>
@@ -87,16 +116,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import { useSupabaseClient } from '#imports'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { useSupabaseClient, useRoute, useRouter } from '#imports'
+
+// --- B2B alternance logic ---
+const b2bCurrentIdx = ref<Record<string, number>>({})
+let b2bInterval: any = null
+onMounted(() => {
+  b2bInterval = setInterval(() => {
+    // Pour chaque case B2B, alterne l'index
+    for (const stage of stages.value) {
+      for (const slot of timeSlots.value) {
+        const key = `${stage}|${slot}`
+        const artists = timetable.value.filter(ea => ea.stage === stage && ea.start_time && ea.start_time.slice(0, 16) === slot)
+        if (artists.length > 1) {
+          if (!(key in b2bCurrentIdx.value)) b2bCurrentIdx.value[key] = 0
+          b2bCurrentIdx.value[key] = (b2bCurrentIdx.value[key] + 1) % artists.length
+        } else {
+          b2bCurrentIdx.value[key] = 0
+        }
+      }
+    }
+  }, 3000)
+})
+onUnmounted(() => {
+  if (b2bInterval) clearInterval(b2bInterval)
+})
 
 const props = defineProps<{
   eventId: number | string
   artistIdsFilter?: number[]
 }>()
 
-const view = ref<'grid' | 'list'>('grid')
-const setView = (v: 'grid' | 'list') => (view.value = v)
+const route = useRoute()
+const router = useRouter()
+const validViews = ['grid', 'list']
+const initialView = (route.query.view && validViews.includes(route.query.view as string)) ? (route.query.view as 'grid' | 'list') : 'list'
+const view = ref<'grid' | 'list'>(initialView)
+
+const setView = (v: 'grid' | 'list') => {
+  if (view.value !== v) {
+    view.value = v
+    router.replace({
+      query: { ...route.query, view: v }
+    })
+  }
+}
 
 const loading = ref(true)
 const error = ref(false)
