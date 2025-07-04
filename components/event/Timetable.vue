@@ -11,28 +11,22 @@
         </label>
       </div>
       <div class="btn-group flex flex-row gap-2 mt-2 sm:mt-0">
-        <button
-          class="btn btn-outline btn-primary flex items-center justify-center"
-          :class="{ 'btn-active': view === 'grid' }"
-          aria-label="Grid view"
-          @click="setView('grid')"
-        >
+        <button class="btn btn-outline btn-primary flex items-center justify-center"
+          :class="{ 'btn-active': view === 'grid' }" aria-label="Grid view" @click="setView('grid')">
           <!-- Icône grille SVG -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
             <rect x="3" y="3" width="7" height="7" rx="2" class="fill-base-200" />
             <rect x="14" y="3" width="7" height="7" rx="2" class="fill-base-200" />
             <rect x="14" y="14" width="7" height="7" rx="2" class="fill-base-200" />
             <rect x="3" y="14" width="7" height="7" rx="2" class="fill-base-200" />
           </svg>
         </button>
-        <button
-          class="btn btn-outline btn-primary flex items-center justify-center"
-          :class="{ 'btn-active': view === 'list' }"
-          aria-label="List view"
-          @click="setView('list')"
-        >
+        <button class="btn btn-outline btn-primary flex items-center justify-center"
+          :class="{ 'btn-active': view === 'list' }" aria-label="List view" @click="setView('list')">
           <!-- Icône liste SVG -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
             <line x1="4" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             <line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             <line x1="4" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -56,19 +50,23 @@
           <tr v-for="stage in stages" :key="stage" class="h-40">
             <td class="font-bold align-middle">{{ stage }}</td>
             <td v-for="slot in timeSlots" :key="slot">
-              <div v-if="getArtistsAt(stage, slot).length > 0" class="card bg-base-100 shadow-sm p-4 mb-1 flex flex-col items-center min-h-24">
+              <div v-if="getArtistsAt(stage, slot).length > 0"
+                class="card bg-base-100 shadow-sm p-4 mb-1 flex flex-col items-center min-h-24">
                 <template v-if="getArtistsAt(stage, slot).length === 1">
-                  <img v-if="getArtistsAt(stage, slot)[0].artist && getArtistsAt(stage, slot)[0].artist.image_url" :src="getArtistsAt(stage, slot)[0].artist.image_url" :alt="getArtistsAt(stage, slot)[0].artist.name" class="w-16 h-16 rounded-full mb-1" />
-                  <span class="font-semibold text-xs">{{ getArtistsAt(stage, slot)[0].artist && getArtistsAt(stage, slot)[0].artist.name ? getArtistsAt(stage, slot)[0].artist.name : 'Unknown artist' }}</span>
-                  <span class="badge badge-ghost badge-xs mt-1">{{ formatTime(getArtistsAt(stage, slot)[0].start_time) }} - {{ formatTime(getArtistsAt(stage, slot)[0].end_time) }}</span>
+                  <img v-if="getArtistsAt(stage, slot)[0].artist && getArtistsAt(stage, slot)[0].artist.image_url"
+                    :src="getArtistsAt(stage, slot)[0].artist.image_url" :alt="getArtistsAt(stage, slot)[0].artist.name"
+                    class="w-16 h-16 rounded-full mb-1" />
+                  <span class="font-semibold text-xs">{{ getArtistsAt(stage, slot)[0].artist && getArtistsAt(stage,
+                    slot)[0].artist.name ? getArtistsAt(stage, slot)[0].artist.name : 'Unknown artist' }}</span>
+                  <span class="badge badge-ghost badge-xs mt-1">{{ formatTime(getArtistsAt(stage, slot)[0].start_time)
+                    }} - {{ formatTime(getArtistsAt(stage, slot)[0].end_time) }}</span>
                 </template>
                 <template v-else>
                   <img
                     v-if="b2bCurrentIdx[`${stage}|${slot}`] !== undefined && getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist && getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist.image_url"
                     :src="getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist.image_url"
                     :alt="getArtistsAt(stage, slot)[b2bCurrentIdx[`${stage}|${slot}`]].artist.name"
-                    class="w-16 h-16 rounded-full mb-1"
-                  />
+                    class="w-16 h-16 rounded-full mb-1" />
                   <span class="font-semibold text-xs">
                     {{
                       getArtistsAt(stage, slot)[0].custom_name
@@ -77,7 +75,8 @@
                     }}
                   </span>
                   <span class="badge badge-ghost badge-xs mt-1">
-                    {{ formatTime(getArtistsAt(stage, slot)[0].start_time) }} - {{ formatTime(getArtistsAt(stage, slot)[0].end_time) }}
+                    {{ formatTime(getArtistsAt(stage, slot)[0].start_time) }} - {{ formatTime(getArtistsAt(stage,
+                    slot)[0].end_time) }}
                   </span>
                 </template>
               </div>
@@ -91,7 +90,8 @@
     <div v-else-if="view === 'list' && timetableEnabled">
       <div v-for="item in sortedList" :key="item.id" class="card bg-base-100 shadow mb-2">
         <div class="card-body flex flex-row items-center gap-3 py-2 min-h-10">
-          <img v-if="item.artist.image_url" :src="item.artist.image_url" :alt="item.artist.name" class="w-8 h-8 rounded-full" />
+          <img v-if="item.artist.image_url" :src="item.artist.image_url" :alt="item.artist.name"
+            class="w-8 h-8 rounded-full" />
           <div class="flex-1">
             <h3 class="card-title text-base">{{ item.artist.name }}</h3>
             <div class="flex flex-wrap gap-2 mt-1">

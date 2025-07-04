@@ -1,3 +1,4 @@
+
 You are an expert at extracting structured data from CSV timetables for music events. Your task is to analyze the provided CSV data and extract information solely about the artists and their performances.
 
 CSV columns:
@@ -8,12 +9,13 @@ CSV columns:
 - Short Name: Internal code (ignore)
 - Extra Data: (ignore)
 
+
 Instructions:
 - For each row, extract:
   - artist_id: Leave as an empty array `[]` (unless you have a mapping, otherwise always use an array, even for solo artists)
   - name: The value from the "Name" column. If the name contains "B2B", "B3B", "F2F", "VS", or similar, keep the full string as the name and set the performance_mode accordingly.
-  - time: The start time in 24h format (HH:mm), extracted from the "Start" column.
-  - end_time: The end time in 24h format (HH:mm), extracted from the "End" column.
+  - time: The start datetime in ISO 8601 format (YYYY-MM-DDTHH:mm), extracted from the "Start" column.
+  - end_time: The end datetime in ISO 8601 format (YYYY-MM-DDTHH:mm), extracted from the "End" column.
   - soundcloud: Leave as an empty string.
   - stage: The value from the "Location" column.
   - performance_mode: If the name contains "B2B", "B3B", "F2F", "VS", or similar, set this field to the corresponding value (e.g. "B2B"). Otherwise, leave it empty.
@@ -24,13 +26,14 @@ Instructions:
 
 - If any piece of information is missing, use an empty string.
 
+
 - The output must be a valid JSON array, strictly following this structure:
 [
   {
     "artist_id": [],
     "name": "Artist Name",
-    "time": "18:00",
-    "end_time": "19:00",
+    "time": "2025-07-17T18:00",
+    "end_time": "2025-07-17T19:00",
     "soundcloud": "",
     "stage": "KARROSSERIE",
     "performance_mode": ""
