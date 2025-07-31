@@ -7,8 +7,8 @@
           ref="searchInput"
           v-model="searchQuery"
           type="text"
-          placeholder="Search events, artists, venues, promoters..."
-          class="input input-bordered input-lg w-full"
+          placeholder="Search events, artists, venues..."
+          class="input input-bordered input-lg w-full sm:placeholder:text-base placeholder:text-sm"
           @input="handleSearch"
           @focus="showDropdown = true"
           @keydown.escape="hideDropdown"
@@ -22,7 +22,7 @@
     <!-- Results dropdown -->
     <div 
       v-show="showDropdown && (hasResults || hasHistory)"
-      class="dropdown-content absolute top-full left-0 right-0 mt-2 bg-base-100 rounded-box shadow-lg border border-base-300 z-50 max-h-96 overflow-y-auto"
+      class="dropdown-content absolute top-full left-0 right-0 mt-2 bg-base-100 rounded-box shadow-lg border border-base-300 z-50 max-h-80 sm:max-h-96 overflow-y-auto"
       style="overscroll-behavior: contain;"
       @wheel="handleDropdownWheel"
     >
@@ -34,7 +34,7 @@
         <button
           v-for="(result, index) in searchResults"
           :key="`result-${result.type}-${result.id}`"
-          class="w-full px-4 py-3 text-left hover:bg-base-200 flex items-center gap-3 transition-colors"
+          class="w-full px-3 sm:px-4 py-2 sm:py-3 text-left hover:bg-base-200 flex items-center gap-2 sm:gap-3 transition-colors"
           :class="{ 'bg-base-200': highlightedIndex === index }"
           @click="selectEntity(result)"
         >
@@ -42,18 +42,18 @@
           <div class="flex-shrink-0">
             <Icon
               :name="getEntityIcon(result.type)"
-              class="h-5 w-5 text-primary"
+              class="h-4 w-4 sm:h-5 sm:w-5 text-primary"
             />
           </div>
           
           <!-- Entity information -->
           <div class="flex-1 min-w-0">
-            <div class="font-medium text-base-content truncate">
+            <div class="font-medium text-sm sm:text-base text-base-content truncate">
               {{ result.name }}
             </div>
-            <div class="text-sm text-base-content/70 truncate">
+            <div class="text-xs sm:text-sm text-base-content/70 truncate">
               {{ getEntityTypeLabel(result.type) }}
-              <span v-if="result.description" class="ml-1">
+              <span v-if="result.description" class="ml-1 hidden sm:inline">
                 · {{ result.description }}
               </span>
             </div>
@@ -85,7 +85,7 @@
         <button
           v-for="(historyItem, index) in searchHistory.slice(0, 5)"
           :key="`history-${index}`"
-          class="w-full px-4 py-3 text-left hover:bg-base-200 flex items-center gap-3 transition-colors"
+          class="w-full px-3 sm:px-4 py-2 sm:py-3 text-left hover:bg-base-200 flex items-center gap-2 sm:gap-3 transition-colors"
           :class="{ 'bg-base-200': highlightedIndex === (searchResults.length + index) }"
           @click="selectHistoryItem(historyItem)"
         >
@@ -93,10 +93,10 @@
             name="heroicons:clock"
             class="h-4 w-4 text-base-content/50 flex-shrink-0"
           />
-          <span class="flex-1 text-base-content truncate">
+          <span class="flex-1 text-sm sm:text-base text-base-content truncate">
             {{ historyItem.query }}
           </span>
-          <span class="text-xs text-base-content/50 flex-shrink-0">
+          <span class="text-xs text-base-content/50 flex-shrink-0 hidden sm:block">
             {{ formatRelativeTime(historyItem.timestamp) }}
           </span>
         </button>

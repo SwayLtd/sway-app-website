@@ -134,73 +134,97 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
-    <!-- Header (mobile & desktop) -->
-    <header class="mobile-header">
-      <div class="mobile-header-content">
-        <NuxtImg src="/images/sway-app.png" alt="Sway Logo" class="mobile-logo object-contain" width="40" height="40" format="webp" loading="eager" densities="x1 x2" :quality="80" />
-        <span class="mobile-app-name">Sway</span>
-      </div>
-      <button class="get-app-btn" @click="openPlayStore">Get the app</button>
-    </header>
+    <div>
+        <!-- Header (mobile & desktop) -->
+        <header class="mobile-header">
+            <div class="mobile-header-content">
+                <NuxtImg src="/images/sway-app.png" alt="Sway Logo" class="mobile-logo object-contain" width="40"
+                    height="40" format="webp" loading="eager" densities="x1 x2" :quality="80" />
+                <span class="mobile-app-name">Sway</span>
+            </div>
+            <button class="get-app-btn" @click="openPlayStore">Get the app</button>
+        </header>
 
-    <!-- Search Bar Overlay -->
-    <div class="search-overlay">
-      <SearchBar />
-    </div>
+        <!-- Search Bar Overlay -->
+        <div class="search-overlay">
+            <SearchBar />
+        </div>
 
-    <div id="scroll-container" ref="scrollContainer">
-      <div class="left-panel">
-        <div class="left-panel-content">
-          <NuxtImg src="/images/sway-app.png" alt="Sway Logo" class="sway-logo object-contain" width="106" height="106" format="webp" loading="eager" densities="x1 x2" :quality="80" />
-          <div class="app-title">Sway</div>
-          <div class="subtitle">Find raves and festivals</div>
-          <div class="description">
-            The ultimate raver companion. Lineups, set times, event discovery, and more – all offline, all in one app.
-          </div>
-          <div class="store-buttons">
-            <NuxtImg src="/images/play-store.png" alt="Play Store" class="store-btn object-contain" width="180" height="55" format="webp" loading="eager" densities="x1 x2" :quality="80" @click="openPlayStore" />
-            <NuxtImg src="/images/app-store.png" alt="App Store" class="store-btn object-contain" width="180" height="55" format="webp" loading="eager" densities="x1 x2" :quality="80" @click="openAppStore" />
-          </div>
+        <div id="scroll-container" ref="scrollContainer">
+            <div class="left-panel">
+                <div class="left-panel-content">
+                    <!-- Search Bar for Desktop - au-dessus du logo -->
+                    <div class="search-section-desktop">
+                        <SearchBar />
+                    </div>
+
+                    <NuxtImg src="/images/sway-app.png" alt="Sway Logo" class="sway-logo object-contain" width="106"
+                        height="106" format="webp" loading="eager" densities="x1 x2" :quality="80" />
+                    <div class="app-title">Sway</div>
+                    <div class="subtitle">Find raves and festivals</div>
+
+                    <div class="description">
+                        The ultimate raver companion. Lineups, set times, event discovery, and more – all offline, all
+                        in one app.
+                    </div>
+                    <div class="store-buttons">
+                        <NuxtImg src="/images/play-store.png" alt="Play Store" class="store-btn object-contain"
+                            width="180" height="55" format="webp" loading="eager" densities="x1 x2" :quality="80"
+                            @click="openPlayStore" />
+                        <NuxtImg src="/images/app-store.png" alt="App Store" class="store-btn object-contain"
+                            width="180" height="55" format="webp" loading="eager" densities="x1 x2" :quality="80"
+                            @click="openAppStore" />
+                    </div>
+                </div>
+                <div class="left-panel-footer">
+                    <span>Copyright © 2025 <span class="sway-highlight">Sway</span></span>
+                </div>
+            </div>
+            <div id="horizontal-section" ref="horizontalSection">
+                <div class="slide first-slide">
+                    <div class="first-slide-content">
+                        <NuxtImg src="/images/phone-composition.png" alt="Phone composition" class="phone-image"
+                            format="webp" loading="eager" densities="x1 x2" :quality="80" />
+
+                        <!-- Search Bar for Mobile and Tablet - after image for tablet, mobile will override with CSS -->
+                        <div class="search-section">
+                            <SearchBar />
+                        </div>
+
+                        <span class="scroll-text">Scroll to discover</span>
+                    </div>
+                </div>
+                <div class="slide feature-slide">
+                    <div class="feature-slide-content">
+                        <NuxtImg src="/images/discover.png" alt="Discover feature" class="mockup-image object-contain"
+                            width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
+                        <div class="feature-title">Discover the best music events 🎵</div>
+                    </div>
+                </div>
+                <div class="slide feature-slide">
+                    <div class="feature-slide-content">
+                        <NuxtImg src="/images/timeline.png" alt="Roadmap" class="mockup-image object-contain"
+                            width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
+                        <div class="feature-title">Roadmap 🎉</div>
+                    </div>
+                </div>
+                <div class="slide feature-slide">
+                    <div class="feature-slide-content">
+                        <NuxtImg src="/images/phone-mockup.png" alt="Notifications" class="mockup-image object-contain"
+                            width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
+                        <div class="feature-title">Stay ahead with smart notifications 🔔</div>
+                    </div>
+                </div>
+                <div class="slide feature-slide">
+                    <div class="feature-slide-content">
+                        <NuxtImg src="/images/phone-mockup.png" alt="Community" class="mockup-image object-contain"
+                            width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
+                        <div class="feature-title">Connect and share with the raving community 💬</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="left-panel-footer">
-          <span>Copyright © 2025 <span class="sway-highlight">Sway</span></span>
-        </div>
-      </div>
-      <div id="horizontal-section" ref="horizontalSection">
-        <div class="slide first-slide">
-          <div class="first-slide-content">
-            <NuxtImg src="/images/phone-composition.png" alt="Phone composition" class="phone-image" format="webp" loading="eager" densities="x1 x2" :quality="80" />
-            <span class="scroll-text">Scroll to discover</span>
-          </div>
-        </div>
-        <div class="slide feature-slide">
-          <div class="feature-slide-content">
-            <NuxtImg src="/images/discover.png" alt="Discover feature" class="mockup-image object-contain" width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
-            <div class="feature-title">Discover the best music events 🎵</div>
-          </div>
-        </div>
-        <div class="slide feature-slide">
-          <div class="feature-slide-content">
-            <NuxtImg src="/images/timeline.png" alt="Roadmap" class="mockup-image object-contain" width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
-            <div class="feature-title">Roadmap 🎉</div>
-          </div>
-        </div>
-        <div class="slide feature-slide">
-          <div class="feature-slide-content">
-            <NuxtImg src="/images/phone-mockup.png" alt="Notifications" class="mockup-image object-contain" width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
-            <div class="feature-title">Stay ahead with smart notifications 🔔</div>
-          </div>
-        </div>
-        <div class="slide feature-slide">
-          <div class="feature-slide-content">
-            <NuxtImg src="/images/phone-mockup.png" alt="Community" class="mockup-image object-contain" width="220" height="440" format="webp" loading="lazy" densities="x1 x2" :quality="80" />
-            <div class="feature-title">Connect and share with the raving community 💬</div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
@@ -293,6 +317,11 @@ ul {
     /* Jaune */
 }
 
+/* Search Bar Overlay */
+.search-overlay {
+    display: none;
+}
+
 /* ------------------------------------------------------------- */
 /*                 MODE LAPTOP (≥ 1025px)                       */
 /* ------------------------------------------------------------- */
@@ -317,7 +346,8 @@ ul {
 
 
     .left-panel-content {
-        margin-top: 16%;
+        margin-top: 0%;
+        /* Even higher position for search bar */
         margin-left: 16%;
     }
 
@@ -401,6 +431,18 @@ ul {
         display: flex;
         transform: translateX(0);
         order: 3;
+    }
+
+    /* First slide content - base styles for mobile/tablet */
+    .first-slide-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 100%;
+        width: 100%;
+        gap: 1rem;
     }
 
     /* Slide de base : 50vw x 100vh, fond gris */
@@ -522,6 +564,8 @@ ul {
         padding: 20px;
         background-color: #fff;
         max-width: 900px;
+        gap: 0.5rem;
+        /* Reduce space between elements */
     }
 
     .logo-title {
@@ -547,6 +591,20 @@ ul {
         min-width: 100%;
     }
 
+    /* First slide content for tablet - column layout with higher specificity */
+    .first-slide .first-slide-content {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        height: auto !important;
+        width: 100% !important;
+        gap: 2rem !important;
+        /* More space between phone image and search bar */
+        padding: 2rem !important;
+    }
+
     .left-panel-footer {
         order: 4;
         width: 100%;
@@ -568,15 +626,20 @@ ul {
         margin: 0 auto;
     }
 
-    /* Première slide (phone-image) */
-    .first-slide-content {
-        margin: 10% auto 10% auto;
-        display: flex;
-        height: 40vh;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        min-width: 100%;
+    /* Première slide (phone-image) - mobile version with higher specificity */
+    .first-slide .first-slide-content {
+        margin: 10% auto 10% auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        /* Stack vertically on mobile */
+        height: auto !important;
+        /* Allow natural height for stacked layout */
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        min-width: 100% !important;
+        gap: 1rem !important;
+        /* Add space between search bar and image */
     }
 
     .first-slide-content .phone-image {
@@ -658,7 +721,8 @@ ul {
         vertical-align: middle;
         font-weight: 600;
         font-size: 48px;
-        margin-top: 24px;
+        margin-top: 8px;
+        /* Reduced space from logo */
         margin-bottom: 4px;
     }
 
@@ -666,7 +730,8 @@ ul {
         font-weight: 600;
         font-size: 24px;
         color: #000;
-        margin-bottom: 24px;
+        margin-bottom: 12px;
+        /* Reduced space below subtitle */
     }
 
     .description {
@@ -804,14 +869,35 @@ ul {
     .first-slide-content {
         order: 1;
         /* Déjà défini via .slide.first-slide */
-        display: flex;
+        display: flex !important;
+        flex-direction: column !important;
+        /* Force vertical layout for mobile */
         align-items: center;
         justify-content: center;
         text-align: center;
         margin: 0 auto;
         width: 100%;
         padding: 20px;
-        height: 50%;
+        height: auto;
+        /* Allow natural height */
+        gap: 1rem;
+        /* Add space between elements */
+    }
+
+    /* Force search bar above phone image on mobile */
+    .first-slide-content .search-section {
+        order: -1 !important;
+        /* Search bar first */
+    }
+
+    .first-slide-content .phone-image {
+        order: 0 !important;
+        /* Phone image second */
+    }
+
+    .first-slide-content .scroll-text {
+        order: 1 !important;
+        /* Scroll text last */
     }
 
     .first-slide-content .phone-image {
@@ -909,27 +995,61 @@ ul {
 }
 
 /* ------------------------------------------------------------- */
-/*                   SEARCH OVERLAY STYLES                     */
+/*                   SEARCH SECTIONS STYLES                    */
 /* ------------------------------------------------------------- */
-.search-overlay {
-    display: none; /* Hidden by default (mobile) */
+
+/* Search section for Mobile and Tablet */
+.search-section {
+    display: block;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    width: 100%;
 }
 
-/* Desktop overlay - fixed position aligned to left panel */
-@media (min-width: 1025px) {
-    .search-overlay {
-        display: block;
-        position: fixed;
-        top: 2rem;
-        left: 8vw; /* Align with left panel content: 16% of 50vw = 8vw */
-        width: 34vw; /* Stay within left panel area */
-        max-width: 600px;
-        z-index: 1000;
-        pointer-events: none;
+/* Search section for Desktop - hidden on mobile/tablet */
+.search-section-desktop {
+    display: none;
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+    .search-section {
+        margin-top: 0rem;
+        /* Reduced space from header */
+        margin-bottom: 1.5rem;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 1050;
+        /* Higher z-index to appear above phone image */
     }
-    
-    .search-overlay > * {
-        pointer-events: auto;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .search-section {
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        /* Reduced bottom margin */
+        padding: 0 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+    .search-section {
+        display: none;
+        /* Hide mobile/tablet search section on desktop */
+    }
+
+    .search-section-desktop {
+        display: block;
+        width: 80%;
+        /* Same width as description */
+        margin: 0 0 4.5rem 0;
+        /* More space below search bar before logo */
     }
 }
 </style>
