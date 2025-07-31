@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useSeoMeta, useHead } from '#imports'
 
 // SEO meta tags
@@ -19,7 +20,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'MobileApplication',
         name: 'Sway',
@@ -54,7 +55,6 @@ function openPlayStore() {
 function openAppStore() {
   window.open('https://apps.apple.com/us/app/sway-find-raves-and-festivals/id6744655264', '_blank')
 }
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 
 // --- Scroll horizontal JS logic converted from script.js ---
 const slidesCount = ref(0)
@@ -143,6 +143,11 @@ onUnmounted(() => {
       </div>
       <button class="get-app-btn" @click="openPlayStore">Get the app</button>
     </header>
+
+    <!-- Search Bar Overlay -->
+    <div class="search-overlay">
+      <SearchBar />
+    </div>
 
     <div id="scroll-container" ref="scrollContainer">
       <div class="left-panel">
@@ -900,6 +905,31 @@ ul {
         color: rgb(131, 139, 143);
         margin-bottom: 20px;
         line-height: 1.4;
+    }
+}
+
+/* ------------------------------------------------------------- */
+/*                   SEARCH OVERLAY STYLES                     */
+/* ------------------------------------------------------------- */
+.search-overlay {
+    display: none; /* Hidden by default (mobile) */
+}
+
+/* Desktop overlay - fixed position aligned to left panel */
+@media (min-width: 1025px) {
+    .search-overlay {
+        display: block;
+        position: fixed;
+        top: 2rem;
+        left: 8vw; /* Align with left panel content: 16% of 50vw = 8vw */
+        width: 34vw; /* Stay within left panel area */
+        max-width: 600px;
+        z-index: 1000;
+        pointer-events: none;
+    }
+    
+    .search-overlay > * {
+        pointer-events: auto;
     }
 }
 </style>
