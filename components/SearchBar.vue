@@ -23,6 +23,8 @@
     <div 
       v-show="showDropdown && (hasResults || hasHistory)"
       class="dropdown-content absolute top-full left-0 right-0 mt-2 bg-base-100 rounded-box shadow-lg border border-base-300 z-50 max-h-96 overflow-y-auto"
+      style="overscroll-behavior: contain;"
+      @wheel="handleDropdownWheel"
     >
       <!-- Search results -->
       <div v-if="hasResults" class="py-2">
@@ -256,6 +258,29 @@ const handleClickOutside = (event: Event) => {
   if (!target.closest('.search-container')) {
     hideDropdown()
   }
+}
+
+// Prevent page scroll when scrolling inside dropdown
+const handleDropdownWheel = (event: WheelEvent) => {
+  const dropdown = event.currentTarget as HTMLElement
+  const { scrollTop, scrollHeight, clientHeight } = dropdown
+  
+  // Check if we're at the top or bottom of the dropdown
+  const isAtTop = scrollTop === 0
+  const isAtBottom = scrollTop + clientHeight >= scrollHeight
+  
+  // Prevent page scroll if we're not at the limits or scrolling in the opposite direction
+  if ((!isAtTop && event.deltaY < 0) || (!isAtBottom && event.deltaY > 0)) {
+    event.stopPropagation()
+  }
+  
+  // Always prevent the default behavior to stop page scrolling
+  if ((isAtTop && event.deltaY < 0) || (isAtBottom && event.deltaY > 0)) {
+    // Allow scroll to propagate only when at limits and scrolling beyond
+    return
+  }
+  
+  event.stopPropagation()
 }
 
 onMounted(() => {
