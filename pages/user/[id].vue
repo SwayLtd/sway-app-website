@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useRoute, useSeoMeta, useSupabaseClient } from '#imports'
 import { onMounted, ref, computed } from 'vue'
+import { useRuntimeConfig } from '#app'
 
 const route = useRoute()
 const entityId = route.params.id as string | undefined
 const isMobile = ref(false)
-
+const config = useRuntimeConfig()
 
 const supabase = useSupabaseClient()
 const user = ref<any>(null)
@@ -67,8 +68,11 @@ onMounted(() => {
       <div class="card-body items-center text-center">
         <h1 class="card-title text-3xl font-bold mb-2">{{ userName }}</h1>
         <p v-if="userBio" class="mb-4 text-base-content/80 max-w-prose w-full mx-auto">{{ userBio }}</p>
-        <div v-if="entityId && !isMobile" class="alert alert-info mt-4">
-          The web version of Sway App is not yet available.<br>Please check back soon, or open the app on your phone!
+        <div v-if="entityId && !isMobile" class="alert alert-info mt-4 max-w-md mx-auto">
+          <div class="text-sm leading-relaxed">
+            <p class="mb-2">The web version of Sway App is not yet available.</p>
+            <p>Please check back soon, or <a :href="`${config.public.BASE_URL || 'https://sway.events'}/get-app`" class="text-primary underline hover:text-primary-focus font-medium transition-colors">open the app</a> on your phone!</p>
+          </div>
         </div>
       </div>
     </div>
