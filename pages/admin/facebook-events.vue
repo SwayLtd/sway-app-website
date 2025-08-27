@@ -155,16 +155,20 @@ const messageType = ref('success')
 const recentImports = ref([])
 const loadingImports = ref(false)
 
-// Resolve Facebook short URLs to full event URLs
+// Resolve Facebook short URLs and invitation URLs to full event URLs
 async function resolveFacebookShortUrl(url) {
   if (!url) return url
   
   try {
     const urlObj = new URL(url)
     
-    // Check if it's a Facebook short URL (fb.me/e/)
-    if ((urlObj.hostname === 'fb.me' || urlObj.hostname === 'www.fb.me') && 
-        urlObj.pathname.startsWith('/e/')) {
+    // Check if it's a Facebook short URL (fb.me/e/) or invitation URL
+    const isFbMeShortUrl = (urlObj.hostname === 'fb.me' || urlObj.hostname === 'www.fb.me') && 
+                           urlObj.pathname.startsWith('/e/')
+    const isFbInviteUrl = urlObj.hostname.includes('facebook.com') && 
+                          urlObj.pathname.includes('/event_invite/')
+    
+    if (isFbMeShortUrl || isFbInviteUrl) {
       
       // Call our API to resolve the redirect
       try {

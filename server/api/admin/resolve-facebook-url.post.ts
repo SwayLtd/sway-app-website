@@ -10,14 +10,18 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Validate that it's a Facebook short URL
+    // Validate that it's a Facebook short URL or invitation URL
     try {
       const urlObj = new URL(url)
-      if (!(urlObj.hostname === 'fb.me' || urlObj.hostname === 'www.fb.me') || 
-          !urlObj.pathname.startsWith('/e/')) {
+      const isFbMeShortUrl = (urlObj.hostname === 'fb.me' || urlObj.hostname === 'www.fb.me') && 
+                             urlObj.pathname.startsWith('/e/')
+      const isFbInviteUrl = urlObj.hostname.includes('facebook.com') && 
+                            urlObj.pathname.includes('/event_invite/')
+      
+      if (!isFbMeShortUrl && !isFbInviteUrl) {
         return {
           success: false,
-          error: 'Not a Facebook short URL'
+          error: 'Not a Facebook short URL or invitation URL'
         }
       }
     } catch {
@@ -28,16 +32,20 @@ export default defineEventHandler(async (event) => {
     }
 
     // For fb.me/e/ URLs, we need to resolve to the final event URL
+    // For event_invite/ URLs, we also need to resolve to the final event URL
     // We'll use curl since Node.js fetch is blocked by Facebook
     
-    // Extract the event code from fb.me/e/CODE
-    const pathMatch = url.match(/\/e\/([^/?]+)/)
-    if (pathMatch) {
-      const eventCode = pathMatch[1]
-      // First convert to Facebook invitation URL format
-      const invitationUrl = `https://www.facebook.com/event_invite/${eventCode}/`
-      
-      // Use curl to resolve the invitation URL (since Facebook blocks fetch)
+    let invitationUrl = url
+    
+    // If it's a fb.me/e/ URL, first convert to invitation format
+    const fbMeMatch = url.match(/fb\.me\/e\/([^/?]+)/)
+    if (fbMeMatch) {
+      const eventCode = fbMeMatch[1]
+      invitationUrl = `https://www.facebook.com/event_invite/${eventCode}/`
+    }
+    
+    // If it's already an invitation URL or we converted it, resolve it
+    if (invitationUrl.includes('/event_invite/')) {
       try {
         const { execSync } = await import('child_process')
         
@@ -69,7 +77,7 @@ export default defineEventHandler(async (event) => {
                 success: true,
                 resolvedUrl: finalEventUrl,
                 originalUrl: url,
-                note: 'Fully resolved fb.me link to Facebook event URL using curl'
+                note: 'Fully resolved Facebook invitation/short URL to event URL using curl'
               }
             }
           }
@@ -93,11 +101,6 @@ export default defineEventHandler(async (event) => {
           originalUrl: url,
           note: 'Converted to invitation URL (curl resolution failed)'
         }
-      }
-    } else {
-      return {
-        success: false,
-        error: 'Could not extract event code from fb.me URL'
       }
     }
 
