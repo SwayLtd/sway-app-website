@@ -25,6 +25,8 @@
                 required
                 @paste="handlePaste"
                 @blur="handleBlur"
+                @input="handleInput"
+                @change="handleChange"
               >
               <label class="label">
                 <span class="label-text-alt">
@@ -233,9 +235,18 @@ async function submitEvent() {
   loading.value = true
   message.value = ''
   
+  console.log('=== SUBMIT EVENT DEBUG ===')
+  console.log('URL avant nettoyage:', facebookUrl.value)
+  
   // Clean and resolve the URL before submission
   const cleanedUrl = await cleanAndResolveUrl(facebookUrl.value)
-  facebookUrl.value = cleanedUrl
+  console.log('URL après nettoyage:', cleanedUrl)
+  
+  // Update the field if URL changed
+  if (cleanedUrl !== facebookUrl.value) {
+    console.log('URL mise à jour dans le champ')
+    facebookUrl.value = cleanedUrl
+  }
   
   try {
     const response = await $fetch('/api/admin/facebook-events', {
@@ -271,11 +282,94 @@ async function submitEvent() {
 async function cleanAndResolveUrl(url) {
   if (!url?.trim()) return ''
   
+  console.log('=== CLEAN AND RESOLVE DEBUG ===')
+  console.log('URL d\'entrée:', url)
+  
   // First resolve short URLs if needed
   const resolvedUrl = await resolveFacebookShortUrl(url.trim())
+  console.log('URL après résolution:', resolvedUrl)
   
   // Then clean the resolved URL
-  return cleanFacebookUrl(resolvedUrl)
+  const finalUrl = cleanFacebookUrl(resolvedUrl)
+  console.log('URL finale après nettoyage:', finalUrl)
+  
+  return finalUrl
+}
+
+// Handle change event - immediate cleaning when user finishes editing
+async function handleChange() {
+  if (facebookUrl.value.trim()) {
+    console.log('Change event - nettoyage immédiat')
+    const originalUrl = facebookUrl.value
+    const cleanedUrl = await cleanAndResolveUrl(facebookUrl.value)
+    
+    if (cleanedUrl !== originalUrl) {
+      facebookUrl.value = cleanedUrl
+      
+      // Show brief success message
+      message.value = 'URL nettoyée automatiquement ✨'
+      messageType.value = 'success'
+      setTimeout(() => {
+        if (message.value === 'URL nettoyée automatiquement ✨') {
+          message.value = ''
+        }
+      }, 2000)
+    }
+  }
+}
+
+// Handle input event - clean URL as user types/pastes
+let inputTimeout = null
+async function handleInput() {
+  const currentUrl = facebookUrl.value.trim()
+  
+  // Si c'est une URL complète Facebook, nettoyer immédiatement
+  if (currentUrl && (currentUrl.includes('fb.me/e/') || currentUrl.includes('event_invite'))) {
+    // Vérifier si ça ressemble à une URL complète
+    if (currentUrl.startsWith('http') && currentUrl.length > 20) {
+      console.log('URL Facebook complète détectée, nettoyage immédiat')
+      const cleanedUrl = await cleanAndResolveUrl(currentUrl)
+      
+      if (cleanedUrl !== currentUrl) {
+        facebookUrl.value = cleanedUrl
+        
+        // Show brief success message
+        message.value = 'URL nettoyée automatiquement ✨'
+        messageType.value = 'success'
+        setTimeout(() => {
+          if (message.value === 'URL nettoyée automatiquement ✨') {
+            message.value = ''
+          }
+        }, 2000)
+      }
+      return
+    }
+  }
+  
+  // Sinon, utiliser le debounce mais plus rapide
+  if (inputTimeout) {
+    clearTimeout(inputTimeout)
+  }
+  
+  inputTimeout = setTimeout(async () => {
+    if (facebookUrl.value.trim()) {
+      const originalUrl = facebookUrl.value
+      const cleanedUrl = await cleanAndResolveUrl(facebookUrl.value)
+      
+      if (cleanedUrl !== originalUrl) {
+        facebookUrl.value = cleanedUrl
+        
+        // Show brief success message
+        message.value = 'URL nettoyée automatiquement ✨'
+        messageType.value = 'success'
+        setTimeout(() => {
+          if (message.value === 'URL nettoyée automatiquement ✨') {
+            message.value = ''
+          }
+        }, 2000)
+      }
+    }
+  }, 500) // Réduit à 0.5 secondes au lieu de 1.5
 }
 
 // Handle paste event - clean URL automatically
