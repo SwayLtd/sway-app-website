@@ -147,6 +147,14 @@ definePageMeta({
   layout: 'admin'
 })
 
+// Titre de page
+useHead({
+  title: 'Import d\'événements Facebook - Admin',
+  meta: [
+    { name: 'description', content: 'Ajoutez des événements Facebook à importer dans le système. Conversion automatique des URLs courtes et d\'invitation.' }
+  ]
+})
+
 // State variables
 const supabase = useSupabaseClient()
 const facebookUrl = ref('')
