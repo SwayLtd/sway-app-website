@@ -17,28 +17,20 @@
               <label class="label">
                 <span class="label-text font-medium">URL de l'événement Facebook</span>
               </label>
-              <div class="flex gap-2">
-                <input 
-                  v-model="facebookUrl" 
-                  type="url" 
-                  placeholder="https://www.facebook.com/events/..." 
-                  class="input input-bordered flex-1" 
-                  required
-                >
-                <button 
-                  type="button" 
-                  class="btn btn-outline btn-sm"
-                  :disabled="!facebookUrl.trim()"
-                  @click="cleanUrl"
-                >
-                  🧹 Nettoyer
-                </button>
-              </div>
+              <input 
+                v-model="facebookUrl" 
+                type="url" 
+                placeholder="https://www.facebook.com/events/..." 
+                class="input input-bordered w-full" 
+                required
+                @paste="handlePaste"
+                @blur="handleBlur"
+              >
               <label class="label">
                 <span class="label-text-alt">
                   Exemple: https://www.facebook.com/events/123456789
                   <br>
-                  <span class="text-info">💡 Les paramètres supplémentaires seront automatiquement supprimés</span>
+                  <span class="text-success">✨ Les URLs longues et courtes sont nettoyées automatiquement</span>
                 </span>
               </label>
             </div>
@@ -146,7 +138,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useSupabaseClient } from '#imports'
 
 definePageMeta({
@@ -163,6 +155,40 @@ const messageType = ref('success')
 const recentImports = ref([])
 const loadingImports = ref(false)
 
+// Resolve Facebook short URLs to full event URLs
+async function resolveFacebookShortUrl(url) {
+  if (!url) return url
+  
+  try {
+    const urlObj = new URL(url)
+    
+    // Check if it's a Facebook short URL (fb.me/e/)
+    if ((urlObj.hostname === 'fb.me' || urlObj.hostname === 'www.fb.me') && 
+        urlObj.pathname.startsWith('/e/')) {
+      
+      // Call our API to resolve the redirect
+      try {
+        const response = await $fetch('/api/admin/resolve-facebook-url', {
+          method: 'POST',
+          body: { url: url }
+        })
+        
+        if (response.success && response.resolvedUrl) {
+          return response.resolvedUrl
+        }
+      } catch (error) {
+        console.warn('Failed to resolve short URL:', error)
+        return url // Return original if resolution fails
+      }
+    }
+    
+    return url
+  } catch (error) {
+    console.warn('URL parsing failed:', error.message)
+    return url
+  }
+}
+
 // Clean Facebook URL by removing parameters
 function cleanFacebookUrl(url) {
   if (!url) return ''
@@ -170,13 +196,20 @@ function cleanFacebookUrl(url) {
   try {
     const urlObj = new URL(url)
     
-    // Keep only the base path for Facebook events
+    // Keep only the base path for Facebook events and invitations
     if (urlObj.hostname.includes('facebook.com') || urlObj.hostname.includes('fb.me')) {
-      // Extract event ID from path
+      // Extract event ID from path for direct event URLs
       const pathMatch = urlObj.pathname.match(/\/events\/(\d+)/)
       if (pathMatch) {
         const eventId = pathMatch[1]
         return `https://www.facebook.com/events/${eventId}/`
+      }
+      
+      // Keep invitation URLs as they are (they're intermediate URLs)
+      const inviteMatch = urlObj.pathname.match(/\/event_invite\/([^/]+)/)
+      if (inviteMatch) {
+        const inviteId = inviteMatch[1]
+        return `https://www.facebook.com/event_invite/${inviteId}/`
       }
     }
     
@@ -196,8 +229,9 @@ async function submitEvent() {
   loading.value = true
   message.value = ''
   
-  // Clean the URL before submission
-  const cleanedUrl = cleanFacebookUrl(facebookUrl.value)
+  // Clean and resolve the URL before submission
+  const cleanedUrl = await cleanAndResolveUrl(facebookUrl.value)
+  facebookUrl.value = cleanedUrl
   
   try {
     const response = await $fetch('/api/admin/facebook-events', {
@@ -229,23 +263,56 @@ async function submitEvent() {
   }
 }
 
-// Clean URL manually (triggered by button)
-function cleanUrl() {
-  if (facebookUrl.value.trim()) {
-    const originalUrl = facebookUrl.value
-    const cleanedUrl = cleanFacebookUrl(facebookUrl.value)
-    
+// Clean and resolve URL (combines both operations)
+async function cleanAndResolveUrl(url) {
+  if (!url?.trim()) return ''
+  
+  // First resolve short URLs if needed
+  const resolvedUrl = await resolveFacebookShortUrl(url.trim())
+  
+  // Then clean the resolved URL
+  return cleanFacebookUrl(resolvedUrl)
+}
+
+// Handle paste event - clean URL automatically
+async function handlePaste(_event) {
+  // Wait for the paste to complete
+  await nextTick()
+  
+  // Clean the pasted URL
+  const cleanedUrl = await cleanAndResolveUrl(facebookUrl.value)
+  
+  if (cleanedUrl !== facebookUrl.value) {
     facebookUrl.value = cleanedUrl
     
-    // Show a temporary message if URL was changed
-    if (originalUrl !== cleanedUrl) {
-      message.value = 'URL nettoyée avec succès !'
+    // Show brief success message
+    message.value = 'URL nettoyée automatiquement ✨'
+    messageType.value = 'success'
+    setTimeout(() => {
+      if (message.value === 'URL nettoyée automatiquement ✨') {
+        message.value = ''
+      }
+    }, 2000)
+  }
+}
+
+// Handle blur event - clean URL when user leaves field
+async function handleBlur() {
+  if (facebookUrl.value.trim()) {
+    const originalUrl = facebookUrl.value
+    const cleanedUrl = await cleanAndResolveUrl(facebookUrl.value)
+    
+    if (cleanedUrl !== originalUrl) {
+      facebookUrl.value = cleanedUrl
+      
+      // Show brief success message
+      message.value = 'URL nettoyée automatiquement ✨'
       messageType.value = 'success'
       setTimeout(() => {
-        if (message.value === 'URL nettoyée avec succès !') {
+        if (message.value === 'URL nettoyée automatiquement ✨') {
           message.value = ''
         }
-      }, 3000)
+      }, 2000)
     }
   }
 }
