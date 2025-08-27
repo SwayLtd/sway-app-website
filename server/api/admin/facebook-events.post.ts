@@ -1,5 +1,33 @@
 import { serverSupabaseServiceRole } from '#supabase/server'
 
+/**
+ * Clean Facebook URL by removing parameters and keeping only the essential event URL
+ */
+function cleanFacebookUrl(url: string): string {
+  if (!url) return ''
+  
+  try {
+    const urlObj = new URL(url)
+    
+    // Keep only the base path for Facebook events
+    if (urlObj.hostname.includes('facebook.com') || urlObj.hostname.includes('fb.me')) {
+      // Extract event ID from path
+      const pathMatch = urlObj.pathname.match(/\/events\/(\d+)/)
+      if (pathMatch) {
+        const eventId = pathMatch[1]
+        return `https://www.facebook.com/events/${eventId}/`
+      }
+    }
+    
+    // If not a Facebook URL or no event ID found, return original URL
+    return url.trim()
+  } catch (error) {
+    // If URL parsing fails, return original
+    console.warn('URL parsing failed:', error)
+    return url.trim()
+  }
+}
+
 export default defineEventHandler(async (event) => {
   // Only allow POST method
   if (getMethod(event) !== 'POST') {
@@ -11,7 +39,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const body = await readBody(event)
-    const { facebook_url, priority = 0 } = body
+    let { facebook_url, priority = 0 } = body
 
     // Validate required fields
     if (!facebook_url || typeof facebook_url !== 'string') {
@@ -20,6 +48,9 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'URL Facebook requise'
       })
     }
+
+    // Clean the URL first
+    facebook_url = cleanFacebookUrl(facebook_url)
 
     // Basic URL validation
     const urlPattern = /^https?:\/\/(www\.)?(facebook\.com|fb\.me)\/events\/.+/i

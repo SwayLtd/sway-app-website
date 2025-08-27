@@ -17,15 +17,29 @@
               <label class="label">
                 <span class="label-text font-medium">URL de l'événement Facebook</span>
               </label>
-              <input 
-                v-model="facebookUrl" 
-                type="url" 
-                placeholder="https://www.facebook.com/events/..." 
-                class="input input-bordered w-full" 
-                required
-              >
+              <div class="flex gap-2">
+                <input 
+                  v-model="facebookUrl" 
+                  type="url" 
+                  placeholder="https://www.facebook.com/events/..." 
+                  class="input input-bordered flex-1" 
+                  required
+                >
+                <button 
+                  type="button" 
+                  class="btn btn-outline btn-sm"
+                  :disabled="!facebookUrl.trim()"
+                  @click="cleanUrl"
+                >
+                  🧹 Nettoyer
+                </button>
+              </div>
               <label class="label">
-                <span class="label-text-alt">Exemple: https://www.facebook.com/events/123456789</span>
+                <span class="label-text-alt">
+                  Exemple: https://www.facebook.com/events/123456789
+                  <br>
+                  <span class="text-info">💡 Les paramètres supplémentaires seront automatiquement supprimés</span>
+                </span>
               </label>
             </div>
 
@@ -149,6 +163,32 @@ const messageType = ref('success')
 const recentImports = ref([])
 const loadingImports = ref(false)
 
+// Clean Facebook URL by removing parameters
+function cleanFacebookUrl(url) {
+  if (!url) return ''
+  
+  try {
+    const urlObj = new URL(url)
+    
+    // Keep only the base path for Facebook events
+    if (urlObj.hostname.includes('facebook.com') || urlObj.hostname.includes('fb.me')) {
+      // Extract event ID from path
+      const pathMatch = urlObj.pathname.match(/\/events\/(\d+)/)
+      if (pathMatch) {
+        const eventId = pathMatch[1]
+        return `https://www.facebook.com/events/${eventId}/`
+      }
+    }
+    
+    // If not a Facebook URL or no event ID found, return original URL
+    return url.trim()
+  } catch (error) {
+    // If URL parsing fails, return original
+    console.warn('URL parsing failed:', error.message)
+    return url.trim()
+  }
+}
+
 // Submit form
 async function submitEvent() {
   if (!facebookUrl.value.trim()) return
@@ -156,11 +196,14 @@ async function submitEvent() {
   loading.value = true
   message.value = ''
   
+  // Clean the URL before submission
+  const cleanedUrl = cleanFacebookUrl(facebookUrl.value)
+  
   try {
     const response = await $fetch('/api/admin/facebook-events', {
       method: 'POST',
       body: {
-        facebook_url: facebookUrl.value.trim(),
+        facebook_url: cleanedUrl,
         priority: priority.value
       }
     })
@@ -183,6 +226,27 @@ async function submitEvent() {
     setTimeout(() => {
       message.value = ''
     }, 5000)
+  }
+}
+
+// Clean URL manually (triggered by button)
+function cleanUrl() {
+  if (facebookUrl.value.trim()) {
+    const originalUrl = facebookUrl.value
+    const cleanedUrl = cleanFacebookUrl(facebookUrl.value)
+    
+    facebookUrl.value = cleanedUrl
+    
+    // Show a temporary message if URL was changed
+    if (originalUrl !== cleanedUrl) {
+      message.value = 'URL nettoyée avec succès !'
+      messageType.value = 'success'
+      setTimeout(() => {
+        if (message.value === 'URL nettoyée avec succès !') {
+          message.value = ''
+        }
+      }, 3000)
+    }
   }
 }
 
