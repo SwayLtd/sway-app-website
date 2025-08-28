@@ -32,7 +32,7 @@
                 <span class="label-text-alt">
                   Exemple: https://www.facebook.com/events/123456789
                   <br>
-                  <span class="text-success">✨ Les URLs longues et courtes sont nettoyées automatiquement</span>
+                  <span class="text-success">✨ URLs longues, courtes, mobiles (m.facebook.com) et d'invitation nettoyées automatiquement</span>
                 </span>
               </label>
             </div>
@@ -211,11 +211,13 @@ function cleanFacebookUrl(url) {
     const urlObj = new URL(url)
     
     // Keep only the base path for Facebook events and invitations
+    // Support both www.facebook.com and m.facebook.com (mobile)
     if (urlObj.hostname.includes('facebook.com') || urlObj.hostname.includes('fb.me')) {
       // Extract event ID from path for direct event URLs
       const pathMatch = urlObj.pathname.match(/\/events\/(\d+)/)
       if (pathMatch) {
         const eventId = pathMatch[1]
+        // Always use www.facebook.com (desktop version) for consistency
         return `https://www.facebook.com/events/${eventId}/`
       }
       
@@ -223,6 +225,7 @@ function cleanFacebookUrl(url) {
       const inviteMatch = urlObj.pathname.match(/\/event_invite\/([^/]+)/)
       if (inviteMatch) {
         const inviteId = inviteMatch[1]
+        // Always use www.facebook.com for invitation URLs too
         return `https://www.facebook.com/event_invite/${inviteId}/`
       }
     }
