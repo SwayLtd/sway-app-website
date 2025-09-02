@@ -379,14 +379,13 @@ onMounted(() => {
 
           <!-- Past Events -->
           <div class="bg-base-100">
-            <h2 class="text-2xl font-bold text-base-content mb-4">PAST EVENTS (Debug: {{ pastEvents.length }} events)
-            </h2>
+            <h2 class="text-2xl font-bold text-base-content mb-4">PAST EVENTS</h2>
             <div v-if="pastEvents.length === 0" class="text-center py-8">
               <p class="text-base-content/60">No past events found.</p>
             </div>
             <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <div v-for="event in pastEvents" :key="event.id"
-                class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow cursor-pointer opacity-80"
+                class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
                 @click="navigateToEvent(event.id)">
                 <figure class="relative h-32">
                   <NuxtImg :src="event.image_url || '/images/default-event.jpg'" :alt="event.title"
@@ -438,7 +437,7 @@ onMounted(() => {
                 </div>
               </div>
               <h1 class="text-5xl font-bold text-base-content mb-4">{{ promoterName }}</h1>
-              <p v-if="promoterDescription" class="text-lg text-base-content/80 leading-relaxed whitespace-pre-line">
+              <p v-if="promoterDescription" class="text-lg text-base-content/80 leading-relaxed whitespace-pre-line text-left">
                 {{ promoterDescription }}
               </p>
             </div>
@@ -474,9 +473,9 @@ onMounted(() => {
                   </span>
                 </div>
               </figure>
-              <div class="card-body">
+              <div class="card-body text-left">
                 <h3 class="card-title text-lg">{{ event.title }}</h3>
-                <div class="space-y-2 text-sm text-base-content/70">
+                <div class="space-y-2 text-sm text-base-content/70 text-left">
                   <div class="flex items-center gap-2">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path
@@ -500,14 +499,13 @@ onMounted(() => {
 
         <!-- Past Events -->
         <div class="mb-12">
-          <h2 class="text-3xl font-bold text-base-content mb-6 text-center">PAST EVENTS (Debug: {{ pastEvents.length }}
-            events)</h2>
+          <h2 class="text-3xl font-bold text-base-content mb-6 text-center">PAST EVENTS</h2>
           <div v-if="pastEvents.length === 0" class="text-center py-8">
             <p class="text-base-content/60">No past events found.</p>
           </div>
           <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div v-for="event in pastEvents" :key="event.id"
-              class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer opacity-80"
+              class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
               @click="navigateToEvent(event.id)">
               <figure class="relative">
                 <NuxtImg :src="event.image_url || '/images/default-event.jpg'" :alt="event.title"
@@ -521,9 +519,9 @@ onMounted(() => {
                   </span>
                 </div>
               </figure>
-              <div class="card-body">
+              <div class="card-body text-left">
                 <h3 class="card-title text-lg">{{ event.title }}</h3>
-                <div class="space-y-2 text-sm text-base-content/70">
+                <div class="space-y-2 text-sm text-base-content/70 text-left">
                   <div class="flex items-center gap-2">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path
